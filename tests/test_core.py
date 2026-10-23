@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import openpyxl
 import pandas as pd
-from replenishment.classification import classify_series
+from replenishment.classification import classify_series, classify_skus
 from replenishment.cleaning import complete_panel, numeric
 from replenishment.config import Config
 from replenishment.evaluation import metrics, run_forecasts, window_plan
@@ -118,6 +118,15 @@ class EstimationTests(unittest.TestCase):
 
     def test_single_positive_provisional(self):
         self.assertFalse(classify_series([0, 0, 1], self.config)["cv2_reliable"])
+
+    def test_all_five_groups_reported_even_if_empty(self):
+        frame = pd.DataFrame({"sku_id": ["test"], "material": ["001"], "product_status": ["Phasing Out"],
+                              "grain": ["weekly"], "date": pd.to_datetime(["2026-01-05"]),
+                              "period_end": pd.to_datetime(["2026-01-11"]), "sales": [0.0]})
+        _, summary = classify_skus(frame, self.config)
+        self.assertEqual(len(summary), 5)
+        self.assertEqual(summary.loc[summary["demand_type"].eq("Smooth"), "skus"].iloc[0], 0)
+        self.assertEqual(summary["skus"].sum(), 1)
 
     def test_outlier_replacement(self):
         y = np.array([10, 11, 9, 1000, 10, 11, 9, 10], float)

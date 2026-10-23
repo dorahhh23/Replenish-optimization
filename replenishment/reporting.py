@@ -8,7 +8,13 @@ def markdown_table(frame, columns=None):
     if columns:
         frame = frame[columns]
     rows = [[str(x) for x in frame.columns]]
-    rows += [[str(x) if pd.notna(x) else "n.a." for x in row] for row in frame.itertuples(index=False, name=None)]
+    def display(value, column):
+        if pd.isna(value):
+            return "n.a."
+        if isinstance(value, float):
+            return f"{value:.1%}" if any(s in str(column) for s in ("share", "rate", "wape", "bias_pct")) else f"{value:,.3f}"
+        return str(value)
+    rows += [[display(x, col) for col, x in zip(frame.columns, row)] for row in frame.itertuples(index=False, name=None)]
     return "\n".join(["| " + " | ".join(rows[0]) + " |", "| " + " | ".join(["---"] * len(rows[0])) + " |"] +
                      ["| " + " | ".join(row) + " |" for row in rows[1:]])
 
@@ -21,6 +27,9 @@ def summary_text(context, audit, classification_summary, panel, plan, evaluation
     n_months = int(panel["date"].dt.to_period("M").nunique())
     latest_end = panel["period_end"].max().date()
     coverage_gap = (pd.Timestamp(context["analysis_end"]) - pd.Timestamp(latest_end)).days
+    prediction = evaluation.get("forecast_16_weeks", pd.DataFrame())
+    future_dates = (f"本次未来16周覆盖 {prediction['week_start'].min().date()} 至 {prediction['week_end'].max().date()}。"
+                    if not prediction.empty else "没有生成周级预测。")
     status = "已完成真实周销量建模与最后16周测试；结果为初步样本外证据" if weekly and not evaluation.get("test_detail", pd.DataFrame()).empty else "仅完成月度清洗、描述性分析；未实施周级预测实验"
     return f"""# 毕业设计需求预测分析
 
@@ -92,10 +101,15 @@ MAE = mean(abs(predicted-actual))；WAPE = sum(abs(error))/sum(abs(actual))；Bi
 仅有约12个月历史时，52周模型通常无法同时获得严格独立评估点；不会强行训练。
 公司现有预测虽然有历史周表头，但缺少每个预测的发布时间/版本，且当前周预测/月预测可能使用分析期结束后的信息，故标为不可比较；不补造历史预测，不把月预测拆成周预测。
 
+已选模型独立16周测试指标（类型仅由测试前训练窗口计算）：
+
+{markdown_table(evaluation.get('selected_test_summary', pd.DataFrame()), ['product_status', 'demand_type', 'skus', 'mae', 'wape', 'bias']) if not evaluation.get('selected_test_summary', pd.DataFrame()).empty else '无可用周级测试。'}
+
 ## 未来16周与库存回测可行性
 
 {'当前真实周数据足以生成运行日期之后下一个完整周开始的16周初步预测；这不是16周验证步长的模型选择，长期精度证据来自独立16周测试，验证仍为1周。26周窗口验证点少，结论需要持续采集更多周后复核。' if weekly else '只有月度来源，不生成或模拟周销量。无法可靠实施未来16周周级实验，需补充真实周销量。'}
 正式未来预测从 reference_date 之后下一个周一开始，保留连续16个完整周。训练结束与未来起点之间的时滞仅用预测跨越，不引入当前月份真实销量、不填造实际销量；各SKU的 unobserved_bridge_weeks 和 lead_from_training_weeks 记录这一时滞。最后完整周结束距 analysis_end 尚有 {coverage_gap} 天；边界周因混有当前月/窗口外日期而被排除，这一数据时滞不应被解释为零销量。
+{future_dates} 独立16周测试评估的是观测后第1至16周；本次未来起点含额外桥接时滞，更长提前期尚无直接验证证据。
 预测输出允许未来日期，它们是估计值；任何模型输入、验证真实值和特征仍严格限制在分析窗口内。
 Phasing Out 有 {review_count} 个SKU触发增长或长串零销量后仍持续正预测的复核标识。预测不自动转换为补货单，需独立制定减量/停止补货规则。
 当前数据不足以实施可信的每周滚动库存回测：缺少分析期内每周库存起点、收货/在途历史及实际到货时间、缺货/未满足需求、历史欠单、订货记录和生效交期。

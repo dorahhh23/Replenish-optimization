@@ -3,6 +3,7 @@ from datetime import date, datetime
 import json
 import math
 import os
+import unicodedata
 from pathlib import Path
 import numpy as np
 import openpyxl
@@ -59,9 +60,13 @@ def write_excel(path, sheets, context=None):
             frame = pd.DataFrame({"status": ["No applicable records"]})
         frame = frame.copy()
         # Width uses header and a sample of actual values. Wrap long audit text.
+        widths = []
+        def display_length(text):
+            return sum(2 if unicodedata.east_asian_width(char) in {"W", "F"} else 1 for char in text)
         for i, col in enumerate(frame.columns, 1):
             sample = [str(col)] + [str(cell_value(x) or "") for x in frame[col].head(50)]
-            width = min(65, max(14, max(min(len(x), 60) for x in sample) + 2))
+            width = min(65, max(14, max(min(display_length(x), 60) for x in sample) + 2))
+            widths.append(width)
             sheet.column_dimensions[get_column_letter(i)].width = width
         header = []
         for column in frame.columns:
@@ -72,19 +77,25 @@ def write_excel(path, sheets, context=None):
             header.append(cell)
         sheet.row_dimensions[1].height = 32
         sheet.append(header)
-        for values in frame.itertuples(index=False, name=None):
+        for row_index, values in enumerate(frame.itertuples(index=False, name=None), 2):
             row = []
-            for column, value in zip(frame.columns, values):
+            required_lines = 1
+            for column, value, width in zip(frame.columns, values, widths):
                 value = cell_value(value)
                 cell = WriteOnlyCell(sheet, value)
+                cell.font = Font(name="Arial", size=10)
+                cell.alignment = Alignment(vertical="center", horizontal="left" if isinstance(value, str) else "right", wrap_text=isinstance(value, str))
                 if isinstance(value, str):
                     # Prevent source text beginning '=' from becoming executable Excel formulas.
                     cell.data_type = "s"
+                    required_lines = max(required_lines, math.ceil(display_length(value) / max(1, width - 2)))
                 if isinstance(value, (date, datetime)):
                     cell.number_format = "yyyy-mm-dd"
                 elif isinstance(value, float):
                     cell.number_format = "0.0%" if any(k in str(column) for k in ("share", "rate", "wape", "bias_pct")) else "#,##0.000"
                 row.append(cell)
+            if required_lines > 1:
+                sheet.row_dimensions[row_index].height = min(409, required_lines * 14 + 6)
             sheet.append(row)
         if len(frame):
             sheet.auto_filter.ref = f"A1:{get_column_letter(len(frame.columns))}{len(frame) + 1}"

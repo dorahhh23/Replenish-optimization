@@ -52,7 +52,8 @@ def aggregate_scores(frame, group_cols):
     grouped["wape"] = grouped["absolute_error_sum"] / grouped["actual_abs_sum"].replace(0, np.nan)
     grouped["bias"] = grouped["error_sum"] / grouped["observations"]
     grouped["bias_pct"] = grouped["error_sum"] / grouped["actual_abs_sum"].replace(0, np.nan)
-    return grouped
+    return grouped[group_cols + ["skus", "mae", "wape", "bias", "bias_pct", "observations",
+                                 "actual_abs_sum", "absolute_error_sum", "error_sum"]]
 
 
 def run_forecasts(panel, config, logger, reference_date=None):

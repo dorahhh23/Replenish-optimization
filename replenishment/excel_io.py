@@ -168,7 +168,8 @@ def identify_fields(data, fields, config):
                 normalized = unique.map(normalize_product_status)
                 permitted = int(normalized.isin(["Normal", "Phasing Out"]).sum())
                 diagnostics.append({"role": role, "field": f["cleaned_name"], "exact_semantic_match": exact,
-                                    "unique_count": len(unique), "unique_values": json.dumps(unique.head(100).tolist(), ensure_ascii=False, default=str),
+                                    "unique_count": len(unique), "unique_values": json.dumps(unique.head(100 if status_like else 20).tolist(), ensure_ascii=False, default=str),
+                                    "unique_values_truncated": len(unique) > (100 if status_like else 20),
                                     "examples": json.dumps(unique.head(5).tolist(), ensure_ascii=False, default=str),
                                     "allowed_status_values": permitted if status_like else None})
                 if exact or (status_like and permitted > 0):

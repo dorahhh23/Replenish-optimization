@@ -33,7 +33,10 @@ def classify_skus(panel, config):
                      "total_sales": group["sales"].sum(),
                      **classify_series(group["sales"].to_numpy(), config)})
     detail = pd.DataFrame(rows)
-    summary = detail.groupby(["product_status", "demand_type"]).size().rename("skus").reset_index()
+    index = pd.MultiIndex.from_product([sorted(detail["product_status"].unique()),
+                                       ["Smooth", "Erratic", "Intermittent", "Lumpy", "Zero"]],
+                                      names=["product_status", "demand_type"])
+    summary = detail.groupby(["product_status", "demand_type"]).size().reindex(index, fill_value=0).rename("skus").reset_index()
     summary["status_share"] = summary["skus"] / summary.groupby("product_status")["skus"].transform("sum")
     summary["all_sku_share"] = summary["skus"] / len(detail)
     return detail, summary
