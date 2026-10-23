@@ -1,0 +1,33 @@
+{
+  "header_rows": 2,
+  "sheet": "sheet1",
+  "fields": {
+    "material": "物料",
+    "sales_org": "销售组织",
+    "storage_location": "销售组织 | 库位",
+    "product_status": "产品基本信息 | 产品状态",
+    "product_category": "产品基本信息 | 国贸产品分类码",
+    "hierarchy_level": "产品基本信息 | 级别"
+  },
+  "allowed_product_status": ["Normal", "Phasing Out"],
+  "week_calendar": "ISO",
+  "actual_sales_group": "实际销量",
+  "adi_threshold": 1.32,
+  "cv2_threshold": 0.49,
+  "variance_ddof": 0,
+  "iqr_multiplier": 1.5,
+  "min_positive_for_outliers": 4,
+  "windows": [13, 26, 52],
+  "preferred_window": 26,
+  "forecast_horizon": 16,
+  "validation_horizon": 1,
+  "min_validation_origins": 3,
+  "max_validation_origins": 8,
+  "validation_step": 1,
+  "smoothing_alpha": 0.1,
+  "tsb_beta": 0.1,
+  "phasing_growth_ratio": 1.25,
+  "negative_demand_policy": "quarantine_sku",
+  "duplicate_policy": "quarantine_sku",
+  "random_seed": 42
+}

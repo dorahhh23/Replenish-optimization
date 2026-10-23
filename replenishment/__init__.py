@@ -1,0 +1,3 @@
+"""Auditable replenishment demand forecasting."""
+
+__version__ = "1.0.0"

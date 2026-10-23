@@ -1,0 +1,21 @@
+# Business source data and generated results stay local.
+*.xlsx
+*.xls
+*.parquet
+*.csv
+*.tsv
+outputs/*
+!outputs/.gitkeep
+data/
+.local/
+.venv/
+__pycache__/
+*.py[cod]
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.env.*
+node_modules/
+*.tmp
