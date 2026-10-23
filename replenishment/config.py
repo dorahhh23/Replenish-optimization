@@ -11,6 +11,8 @@ class Config:
     header_rows: int = 2
     sheet: str | None = None
     fields: dict[str, str] = field(default_factory=dict)
+    excluded_hierarchy_levels: list[str] = field(default_factory=lambda: ["Son"])
+    sales_measure: str = "net_sales_quantity"
     actual_sales_group: str = "实际销量"
     company_forecast_group: str = "预测销量"
     week_calendar: str = "ISO"
@@ -36,7 +38,7 @@ class Config:
     random_seed: int = 42
     # An absent source column is unknown coverage; never invent demand for it.
     fill_internal_missing_weeks: bool = True
-    negative_demand_policy: str = "quarantine_sku"
+    negative_demand_policy: str = "retain_net_sales"
     duplicate_policy: str = "quarantine_sku"
 
     def validate(self):
@@ -49,8 +51,12 @@ class Config:
             raise ValueError("Only ISO weeks are implemented. Supply a verified calendar before changing this.")
         if self.grain not in {"auto", "weekly", "monthly", "daily", "transaction"}:
             raise ValueError("Unsupported time grain.")
-        if self.negative_demand_policy != "quarantine_sku" or self.duplicate_policy != "quarantine_sku":
-            raise ValueError("Only explicit SKU quarantine is implemented for negative sales and duplicate snapshots.")
+        if self.negative_demand_policy != "retain_net_sales" or self.sales_measure != "net_sales_quantity":
+            raise ValueError("Source is confirmed net sales; retain signed actuals without deducting returns again.")
+        if self.duplicate_policy != "quarantine_sku":
+            raise ValueError("Unresolved duplicate snapshots must be quarantined after Son exclusion.")
+        if {str(x).strip().casefold() for x in self.excluded_hierarchy_levels} != {"son"}:
+            raise ValueError("The confirmed hierarchy rule is to exclude Son only.")
         if self.header_rows < 1 or self.variance_ddof not in (0, 1):
             raise ValueError("Invalid header or variance setting.")
         if not 0 < self.smoothing_alpha <= 1 or not 0 < self.tsb_beta <= 1:

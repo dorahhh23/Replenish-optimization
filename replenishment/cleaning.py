@@ -1,5 +1,6 @@
 """Key construction, normalization, auditable quarantine, and period completion."""
 import json
+import re
 import numpy as np
 import pandas as pd
 from .excel_io import SchemaError, identifier
@@ -30,6 +31,8 @@ def keyed_source(data, mapping):
     out["sku_id"] = [json.dumps(list(values), ensure_ascii=False, separators=(",", ":"))
                      for values in out[["sales_org", "storage_location", "material"]].itertuples(index=False, name=None)]
     out["product_status"] = out[mapping["product_status"]]
+    if "hierarchy_level" in mapping:
+        out["hierarchy_level"] = out[mapping["hierarchy_level"]]
     if "unit" in mapping:
         out["unit"] = out[mapping["unit"]].astype("string").str.strip().str.upper()
     else:
@@ -37,8 +40,27 @@ def keyed_source(data, mapping):
     return out
 
 
+def filter_hierarchy(data, excluded=("Son",)):
+    """Exclude every exact Son label, retaining Parent without combining rows."""
+    if "hierarchy_level" not in data:
+        raise SchemaError("Hierarchy field is required to apply the confirmed exclude-Son rule.")
+    result = data.copy()
+    normalized = result["hierarchy_level"].map(
+        lambda x: re.sub(r"\s+", " ", str(x).strip()).casefold() if pd.notna(x) else "")
+    blocked = {re.sub(r"\s+", " ", str(x).strip()).casefold() for x in excluded}
+    mask = normalized.isin(blocked)
+    audit = (result.assign(hierarchy_normalized=normalized.replace("", "<MISSING>"), excluded=mask)
+             .groupby(["hierarchy_normalized", "excluded"], dropna=False)
+             .agg(records=("sku_id", "size"), skus=("sku_id", "nunique")).reset_index())
+    kept, removed = result.loc[~mask].copy(), result.loc[mask].copy()
+    assert not normalized.loc[~mask].isin(blocked).any()
+    return kept, removed, audit
+
+
 def to_long(source, periods, mapping, config):
     metadata = ["sku_id", "material", "sales_org", "storage_location", "product_status", "missing_key", "unit", "_source_row"]
+    if "hierarchy_level" in source:
+        metadata.append("hierarchy_level")
     if "product_category" in mapping:
         source = source.copy()
         source["product_category"] = source[mapping["product_category"]]
@@ -76,7 +98,7 @@ def to_long(source, periods, mapping, config):
 
 
 def quality_check(data, grain, wide_snapshot=True, status_conflicts=()):
-    """Never merge ambiguous Parent/Son rows or turn returns/missing sales into zero."""
+    """Retain signed net sales; quarantine unresolved keys and missing values."""
     result = data.copy()
     result["sales"] = numeric(result["sales_raw"])
     bad = {}
@@ -87,13 +109,12 @@ def quality_check(data, grain, wide_snapshot=True, status_conflicts=()):
 
     flag(result.loc[result["missing_key"], "sku_id"].unique(), "missing_or_invalid_material")
     flag(result.loc[result["sales"].isna(), "sku_id"].unique(), "missing_or_nonnumeric_sales")
-    flag(result.loc[result["sales"].lt(0), "sku_id"].unique(), "negative_sales_possible_return")
     flag(status_conflicts, "conflicting_product_status")
     multiunit = result.groupby("sku_id")["unit"].nunique(dropna=False)
     flag(multiunit[multiunit > 1].index, "inconsistent_unit")
     if wide_snapshot or grain in {"weekly", "monthly"}:
         dup = result.duplicated(["sku_id", "date"], keep=False)
-        flag(result.loc[dup, "sku_id"].unique(), "duplicate_sku_period_or_parent_son_overlap")
+        flag(result.loc[dup, "sku_id"].unique(), "unresolved_duplicate_sku_period_after_son_filter")
     else:
         # Without transaction IDs, identical daily rows could be separate legitimate sales.
         # Quarantine rather than silently deduplicating or aggregating suspicious repeats.
@@ -101,19 +122,20 @@ def quality_check(data, grain, wide_snapshot=True, status_conflicts=()):
         flag(result.loc[dup, "sku_id"].unique(), "duplicate_event_without_transaction_id")
     quality = []
     for issue, mask in [
-        ("negative_sales_possible_return", result["sales"].lt(0)),
+        ("negative_net_sales_retained_returns_already_deducted", result["sales"].lt(0)),
         ("missing_or_nonnumeric_sales", result["sales"].isna()),
         ("missing_or_invalid_material", result["missing_key"]),
         ("duplicate_sku_period", dup),
         ("blank_storage_location", result["storage_location"].eq("<UNSPECIFIED>")),
         ("missing_sales_unit", result["unit"].eq("<NOT PROVIDED>") | result["unit"].isna()),
+        ("inconsistent_unit", result["sku_id"].isin(multiunit[multiunit > 1].index)),
     ]:
         quality.append({"issue": issue, "records": int(mask.sum()), "skus": int(result.loc[mask, "sku_id"].nunique())})
     quarantined = result.loc[result["sku_id"].isin(bad)].copy()
     quarantined["reason"] = quarantined["sku_id"].map(lambda key: "; ".join(sorted(bad[key])))
     reason_rows = [{"sku_id": key, "reason": reason} for key, reasons in sorted(bad.items()) for reason in sorted(reasons)]
     clean = result.loc[~result["sku_id"].isin(bad)].copy()
-    assert clean["sales"].notna().all() and clean["sales"].ge(0).all()
+    assert clean["sales"].notna().all() and np.isfinite(clean["sales"]).all()
     return clean, pd.DataFrame(quality), quarantined, pd.DataFrame(reason_rows, columns=["sku_id", "reason"])
 
 
@@ -144,10 +166,11 @@ def complete_panel(data, grain, start, end, fill_internal_missing_weeks=True):
         raise SchemaError("Per-SKU periods are absent and zero completion is disabled.")
     panel["sales"] = panel["sales"].fillna(0.0)
     panel = panel.reset_index()
-    metadata = working.drop_duplicates("sku_id")[[c for c in ["sku_id", "material", "sales_org", "storage_location", "product_status", "unit", "product_category"] if c in working]]
+    metadata = working.drop_duplicates("sku_id")[[c for c in ["sku_id", "material", "sales_org", "storage_location", "product_status", "unit", "product_category", "hierarchy_level"] if c in working]]
     panel = panel.merge(metadata, on="sku_id", how="left", validate="many_to_one")
     panel["period_end"] = panel["date"] + (pd.Timedelta(days=6) if grain == "weekly" else pd.offsets.MonthEnd(0))
     panel["grain"] = grain
+    panel["sales_measure"] = "net_sales_quantity"
     assert_period(panel, start, end)
     assert not panel.duplicated(["sku_id", "date"]).any()
     assert set(panel["product_status"].unique()) <= {"Normal", "Phasing Out"}

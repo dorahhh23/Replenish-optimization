@@ -10,6 +10,8 @@
     "hierarchy_level": "产品基本信息 | 级别"
   },
   "allowed_product_status": ["Normal", "Phasing Out"],
+  "excluded_hierarchy_levels": ["Son"],
+  "sales_measure": "net_sales_quantity",
   "week_calendar": "ISO",
   "actual_sales_group": "实际销量",
   "adi_threshold": 1.32,
@@ -27,7 +29,7 @@
   "smoothing_alpha": 0.1,
   "tsb_beta": 0.1,
   "phasing_growth_ratio": 1.25,
-  "negative_demand_policy": "quarantine_sku",
+  "negative_demand_policy": "retain_net_sales",
   "duplicate_policy": "quarantine_sku",
   "random_seed": 42
 }

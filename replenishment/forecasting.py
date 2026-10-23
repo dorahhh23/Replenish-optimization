@@ -4,10 +4,16 @@ import numpy as np
 METHODS = ("MovingAverage", "SES", "Croston", "SBA", "TSB")
 
 
+def method_applicable(values, method):
+    y = np.asarray(values, dtype=float)
+    return bool(len(y) and np.isfinite(y).all() and
+                (method in {"MovingAverage", "SES"} or not (y < 0).any()))
+
+
 def forecast(values, method, horizon, alpha=0.1, beta=0.1):
     y = np.asarray(values, dtype=float)
-    if not len(y) or not np.isfinite(y).all() or (y < 0).any():
-        raise ValueError("Training series must be finite and nonnegative.")
+    if not method_applicable(y, method):
+        raise ValueError(f"{method} is not applicable to this training window; Croston/SBA/TSB require nonnegative input.")
     if method == "MovingAverage":
         level = float(y.mean())
     elif method == "SES":
@@ -38,4 +44,5 @@ def forecast(values, method, horizon, alpha=0.1, beta=0.1):
             level *= 1 - alpha / 2
     else:
         raise ValueError(f"Unsupported forecast method: {method}")
+    # Signed actuals are preserved. Only the operational demand forecast has floor 0.
     return np.full(horizon, max(0.0, level), dtype=float)

@@ -41,6 +41,7 @@ def summary_text(context, audit, classification_summary, panel, plan, evaluation
 - analysis_start：{context['analysis_start']}；analysis_end：{context['analysis_end']}。
 - 当前不完整月份 {context['excluded_current_month']} 已完全排除；跨边界周也整周排除，避免引入当前月销量。
 - 最终只分析 Normal 和 Phasing Out 产品；Phasing Out 保留独立标识。
+- 所有 Son 行已排除，保留 Parent；层级筛选不把 Parent/Son 相加。
 - 分析窗口严格为12个完整自然月；实际历史可用期并不等于已覆盖整个12个月。
 - 真实数据粒度：{context['source_grain']}；分析粒度：{context['analysis_grain']}。
 - 最终数据最早日期：{panel['date'].min().date()}；最晚周/月开始日：{panel['date'].max().date()}；最后期间结束日：{latest_end}。
@@ -58,11 +59,13 @@ def summary_text(context, audit, classification_summary, panel, plan, evaluation
 库存、在途、欠单和公司预测为当前快照/未来排程，未提供可验证的历史生效日期或预测发布时间，均不进入历史模型和历史库存回测。
 产品状态作为当前产品主数据进行筛选；缺少历史状态生效日期，因此回测是“当前合格产品队列的回溯测试”，不是历史全产品组合回测。
 缺少单位字段时不推断件/箱转换，也不计算跨物料可比的总金额。数量误差总体汇总仅作源数量单位的组合描述，按SKU评价优先。
+已确认周销量和月销量都是到账/记账期间已扣退货的净销量；保留原期间的正负原值，不再次扣退货、不迁移到原销售期间、不把负数改成零。
+未提供价格表，本次未计算销售额、库存价值、利润、持有成本、缺货成本或金额加权误差。预测、MAE、Bias均按源数量口径计算，WAPE按数量误差计算，不需要单价。
 
 {markdown_table(quality)}
 
-重复快照键（含 Parent/Son）、负销量/可能退货、缺失销量、单位冲突的整个SKU被隔离，明细在 quarantined_records.csv。原始值保持不变，未静默累加、删除重复行或把负数改为零。
-最终分类和建模只基于通过检查的合格SKU；这一排除会带来队列选择偏差，需要业务确认退货、层级口径后再扩大样本。
+全部 Son 先按已确认规则排除，明细在 excluded_son_records.csv。剩余未解决的重复快照键、缺失销量、无效物料和单位冲突才隔离，明细在 quarantined_records.csv。负净销量是已确认的退货业务记录，不再作为排除整个SKU的理由。
+最终分类和建模基于通过检查的合格SKU；仍需检查主数据及来源覆盖造成的队列选择偏差。
 仅在已有连续来源覆盖区间内补齐某个SKU的无销量周；不会把最早来源之前未知的周当成零需求。未知整周缺失会停止建模。
 没有上架日期/停产生效日期，默认合格SKU在已提供的周覆盖区间内可观察，需后续用生命周期字段验证。
 
@@ -70,9 +73,11 @@ def summary_text(context, audit, classification_summary, panel, plan, evaluation
 
 ADI = 观察期间数 / 正需求期间数。
 CV² = Var(D+) / Mean(D+)²，其中 D+ 仅包含大于零的真实销量，方差 ddof={context['variance_ddof']}。
+这里的正需求来自正净销量，无法从净额反推毛销量或实际订单发生次数。含负净销量的分类标为暂定，classification_provisional_due_to_returns=True。
 阈值 ADI={context['adi_threshold']}、CV²={context['cv2_threshold']}，均可配置；等于阈值归入高ADI/高CV²组。
 Smooth 为低ADI低CV²；Erratic 为低ADI高CV²；Intermittent 为高ADI低CV²；Lumpy 为高ADI高CV²；全零序列为 Zero。
 只有一个正需求点时 CV² 暂记0且 cv2_reliable=False；分类暂定，不能声称波动已可靠估计。
+无正净销量但含负净销量的纯退货序列不强行归为Zero，单列为“不可分类”；本次共 {context.get('unclassified_return_only_skus', 0)} 个。五类占比以全部合格SKU为分母，不可分类样本存在时五类占比之和小于100%。
 产品状态与需求类型为两种独立维度。分类在真实分析粒度上计算，月分类不能直接当作周分类。
 
 {markdown_table(classification_summary)}
@@ -83,6 +88,7 @@ Sen slope 为全部两两时间点斜率的中位数。比较前半段和后半�
 只用正销量计算 IQR 和 U = Q75 + 1.5 × IQR（倍数可配置）；正需求样本不足时不替换。
 如果 Sen slope > 配置阈值且后半段Median高于前半段，超限高值仅标记，不替换。
 其余统计确认超限点分别保留 Raw、截断到U的 Winsorized、替换为历史非零销量中位数的 Median。
+三个版本都保留原始负净销量；IQR只处理正净销量异常大单，不冲销或抹除退货。
 这里的确认是可复现统计规则，尚不等于已获业务订单确认。完整窗口异常值比较只用于描述与最终估计；验证/测试中的阈值、趋势和中位数都只从各自训练窗口重算。
 cleaned_last_12_complete_months.csv、测试指标和后续库存实际需求始终使用未被异常值替换的真实销量。
 
@@ -91,11 +97,14 @@ cleaned_last_12_complete_months.csv、测试指标和后续库存实际需求始
 {markdown_table(plan)}
 
 候选为 MovingAverage、SES、Croston、SBA、TSB，分别比较 Raw/Winsorized/Median。
+MovingAverage/SES可用有正负的净销量估计；Croston/SBA/TSB要求非负训练序列，任一训练窗含负净销量时该方法在该阶段标为不适用，见 Method applicability / method_applicability.csv。不会为了运行间歇模型把负数记成零。
+输出是用于补货的非负数量预测，移动平均/SES内部可有负水平，但只在预测输出端设下限0；历史实际值与评估目标保留原始负净销量。
 先保留最后16个真实周为独立测试集，再在此前历史上做滚动原点验证；默认验证步长1周、预测步长1周。不同历史窗口共用相同验证原点，保证可比。
 选择依据为验证MAE，分数相同时优先26周；所有平滑参数固定在配置中，没有在测试集调参。
 模型选择后仅对已选方案汇总正式测试结果。其他候选测试比较标为描述性结果，不用于再选模型。
+历史测试选择只检查测试起点之前的可见历史和验证分数。最终重估若因新观察到的退货使原方法不再适用，只在原验证排名中选择当前可拟合的候选，不读取测试误差；历史选择与最终选择分开记录，不能把最终模型的指标冒充历史已选模型测试。
 验证/测试分组的需求类型仅用相应原点前的训练销量计算；全窗口最终分类不参与历史模型选择。
-MAE = mean(abs(predicted-actual))；WAPE = sum(abs(error))/sum(abs(actual))；Bias = mean(predicted-actual)，正值表示高估。
+MAE = mean(abs(predicted-actual))；WAPE = sum(abs(error))/sum(abs(actual))；Bias = mean(predicted-actual)，正值表示高估。净销量可为负，WAPE分母取原始净销量绝对值之和，避免正负退货相互抵消；没有金额或单价权重。
 真实需求总和为0时 WAPE/Bias百分比为 n.a.，不伪装为0。
 13/26周候选若共同验证点少于最低要求，标为样本不足。52周只有在足够训练、验证和16周测试点都存在时才能比较，不借用窗口外历史。
 仅有约12个月历史时，52周模型通常无法同时获得严格独立评估点；不会强行训练。
@@ -119,10 +128,10 @@ Phasing Out 有 {review_count} 个SKU触发增长或长串零销量后仍持续�
 
 1. 核实公司周历是否为ISO 8601（当前显式配置为ISO，周一至周日）；如为财务周历，需提供周起止日期映射，不能直接复用本次日历结论。
 2. 补充分析窗口前端缺少的真实周、当前最后完整月内边界周的逐日销量；当前未使用更早/当前月数据凑样本。
-3. 解释Parent/Son汇总与明细口径，提供独立交易ID、物料层级和替代物料映射，确认哪些记录可合并。
-4. 提供销售/退货分离数量、基本计量单位、包装换算规则和物料有效上市日期。
+3. Parent/Son已按“忽略全部Son”落实；仅在仍存在Parent内部重复时补充独立交易ID和层级主数据。
+4. 退货已确认计入到账期间的周/月净销量。若研究毛需求，仍需额外提供销售和退货分离明细；补充基本计量单位、包装换算规则和物料有效上市日期。
 5. 提供逐期冻结的公司预测：SKU、target_week、issued_at、forecast_version、quantity。
-6. 提供历史产品状态有效期、每周库存/收货/订单/欠单/缺货记录、真实交期、成本和服务目标后开展库存回测与价值分析。
+6. 提供历史产品状态有效期、每周库存/收货/订单/欠单/缺货记录、真实交期和服务目标后开展数量库存回测。另需按物料、币种、生效日期区分的成本/售价表，才能开展库存价值、利润和金额成本分析。
 
 原始Excel SHA-256：{context['source_sha256']}。已在运行结束时重新核对，未修改原始工作簿。
 随机种子：{context['random_seed']}；本项目方法本身为确定性计算。运行配置及依赖版本保存在 run_manifest.json。

@@ -3,7 +3,7 @@ import json
 import numpy as np
 import pandas as pd
 from .classification import classify_series
-from .forecasting import METHODS, forecast
+from .forecasting import METHODS, forecast, method_applicable
 from .outliers import outlier_versions
 
 
@@ -57,7 +57,7 @@ def aggregate_scores(frame, group_cols):
 
 
 def run_forecasts(panel, config, logger, reference_date=None):
-    validation_rows, test_rows, selected_rows, forecasts, availability = [], [], [], [], []
+    validation_rows, test_rows, selected_rows, forecasts, availability, applicability = [], [], [], [], [], []
     for number, (sku, group) in enumerate(panel.groupby("sku_id", sort=True), 1):
         group = group.sort_values("date")
         y, dates = group["sales"].to_numpy(float), group["date"].reset_index(drop=True)
@@ -69,6 +69,16 @@ def run_forecasts(panel, config, logger, reference_date=None):
             selected_rows.append({"sku_id": sku, "product_status": status, "status": "insufficient validation and held-out test samples"})
             continue
         scores = []
+        test_cache, final_cache = {}, {}
+        for window in windows:
+            test_cache[window] = outlier_versions(y[test_origin - window:test_origin], config)[0]
+            final_cache[window] = outlier_versions(y[-window:], config)[0]
+
+        def record_unavailable(phase, window, version, method, train, origin):
+            applicability.append({"sku_id": sku, "product_status": status, "phase": phase,
+                                  "window_weeks": window, "version": version, "method": method,
+                                  "origin": origin, "negative_net_periods": int((np.asarray(train) < 0).sum()),
+                                  "applicable": False, "reason": "negative net sales; no return clipping or reallocation"})
         # Labels for each fold are computed from that fold's historical window only.
         for window in windows:
             fold_cache = {}
@@ -77,6 +87,12 @@ def run_forecasts(panel, config, logger, reference_date=None):
                 fold_cache[origin] = (outlier_versions(train, config)[0], classify_series(train, config)["demand_type"])
             for version in ("Raw", "Winsorized", "Median"):
                 for method in METHODS:
+                    invalid_origins = [o for o in origins if not method_applicable(fold_cache[o][0][version], method)]
+                    if invalid_origins:
+                        for origin in invalid_origins:
+                            record_unavailable("rolling_validation", window, version, method,
+                                               fold_cache[origin][0][version], dates.iloc[origin])
+                        continue  # Require every common origin; never compare partial candidate scores.
                     predicted, actual = [], []
                     for origin in origins:
                         variations, kind = fold_cache[origin]
@@ -94,15 +110,22 @@ def run_forecasts(panel, config, logger, reference_date=None):
         # MAE is defined even for Zero SKUs. Prefer 26 weeks only when scores tie.
         # All smoothing parameters are fixed in config, never tuned on test actuals.
         version_order = {"Raw": 0, "Winsorized": 1, "Median": 2}
-        chosen = min(scores, key=lambda s: (round(s["mae"], 12), s["window_weeks"] != config.preferred_window,
-                                            abs(s["bias"]), version_order[s["version"]], METHODS.index(s["method"])))
+        def rank_score(s):
+            return (round(s["mae"], 12), s["window_weeks"] != config.preferred_window,
+                    abs(s["bias"]), version_order[s["version"]], METHODS.index(s["method"]))
+        # Applicability for the historical decision only sees the test-origin past.
+        historical_candidates = [s for s in scores if method_applicable(test_cache[s["window_weeks"]][s["version"]], s["method"])]
+        chosen = min(historical_candidates, key=rank_score)
         selected_identity = (chosen["window_weeks"], chosen["version"], chosen["method"])
         for window in windows:
             train = y[test_origin - window:test_origin]
-            variations = outlier_versions(train, config)[0]
+            variations = test_cache[window]
             test_kind = classify_series(train, config)["demand_type"]
             for version, values in variations.items():
                 for method in METHODS:
+                    if not method_applicable(values, method):
+                        record_unavailable("heldout_16_week_test", window, version, method, values, dates.iloc[test_origin])
+                        continue
                     p = forecast(values, method, config.forecast_horizon, config.smoothing_alpha, config.tsb_beta)
                     score = metrics(y[test_origin:], p)
                     test_rows.append({"sku_id": sku, "product_status": status, "demand_type": test_kind,
@@ -110,8 +133,16 @@ def run_forecasts(panel, config, logger, reference_date=None):
                                       "selected_by_validation": (window, version, method) == selected_identity,
                                       "test_origin": dates.iloc[test_origin], "train_end": dates.iloc[test_origin - 1],
                                       "phase": "heldout_16_week_test", **score})
-        window, version, method = selected_identity
-        final_versions = outlier_versions(y[-window:], config)[0]
+        # At the run date, newly observed returns can change which model can be fitted.
+        # Reuse the validation ranking, never test errors. Keep historical test selection separate.
+        for s in scores:
+            values = final_cache[s["window_weeks"]][s["version"]]
+            if not method_applicable(values, s["method"]):
+                record_unavailable("final_refit", s["window_weeks"], s["version"], s["method"], values, dates.iloc[-1])
+        final_candidates = [s for s in scores if method_applicable(final_cache[s["window_weeks"]][s["version"]], s["method"])]
+        final_chosen = min(final_candidates, key=rank_score)
+        window, version, method = (final_chosen["window_weeks"], final_chosen["version"], final_chosen["method"])
+        final_versions = final_cache[window]
         ref = pd.Timestamp(reference_date if reference_date is not None else pd.Timestamp.today()).normalize()
         # Forecast the next 16 full weeks after the run date. Bridge the reporting lag
         # with predictions only, never with missing/current-month actuals.
@@ -130,7 +161,11 @@ def run_forecasts(panel, config, logger, reference_date=None):
         review = status == "Phasing Out" and (growth or (trailing >= config.trailing_zero_review_periods and p.sum() > 0))
         selected_rows.append({"sku_id": sku, "material": group["material"].iloc[0], "product_status": status,
                               "window_weeks": window, "version": version, "method": method,
-                              "validation_mae": chosen["mae"], "validation_origins": len(origins),
+                              "validation_mae": final_chosen["mae"], "validation_origins": len(origins),
+                              "historical_selected_window": selected_identity[0], "historical_selected_version": selected_identity[1],
+                              "historical_selected_method": selected_identity[2],
+                              "final_selection_changed_for_applicability": (window, version, method) != selected_identity,
+                              "negative_net_periods": int((y < 0).sum()), "sales_measure": "net_sales_quantity",
                               "validation_origin_dates": json.dumps([str(dates.iloc[o].date()) for o in origins]),
                               "test_origin": dates.iloc[test_origin], "test_end": group["period_end"].iloc[-1],
                               "training_end": group["period_end"].iloc[-1], "forecast_16_week_total": float(p.sum()),
@@ -157,4 +192,5 @@ def run_forecasts(panel, config, logger, reference_date=None):
             "forecast_16_weeks": pd.DataFrame(forecasts), "test_summary": scores,
             "selected_test": selected_test, "selected_test_summary": selected_summary,
             "window_availability": pd.DataFrame(availability),
+            "method_applicability": pd.DataFrame(applicability, columns=["sku_id", "product_status", "phase", "window_weeks", "version", "method", "origin", "negative_net_periods", "applicable", "reason"]),
             "validation_summary": aggregate_scores(validation, ["product_status", "demand_type", "window_weeks", "version", "method"])}

@@ -9,7 +9,7 @@ import sys
 import numpy as np
 import pandas as pd
 from .classification import classify_skus
-from .cleaning import count_stage, keyed_source, to_long, quality_check, complete_panel
+from .cleaning import count_stage, keyed_source, to_long, quality_check, complete_panel, filter_hierarchy
 from .evaluation import run_forecasts, window_plan
 from .excel_io import (SchemaError, read_workbook, identify_fields, identify_period_columns,
                        field_candidates, sha256)
@@ -48,10 +48,10 @@ def annotate_dictionary(dictionary, mapping, periods, start, end, source_grain):
             role = names[name]
             dictionary.loc[i, "meaning"] = {"material": "物料/SKU编码，按字符串保留前导零", "sales_org": "销售组织",
                 "storage_location": "库位；空值不推断仓库", "product_status": "产品生命周期状态（Normal/Phasing Out筛选）",
-                "product_category": "源产品分类，与ADI需求类型独立", "hierarchy_level": "Parent/Son层级，重复键需澄清",
+                "product_category": "源产品分类，与ADI需求类型独立", "hierarchy_level": "层级筛选：忽略所有Son，保留Parent",
                 "unit": "销售数量计量单位"}.get(role, role)
             roles.append(role)
-            dictionary.loc[i, "used_for_analysis"] = role in {"material", "sales_org", "storage_location", "product_status", "unit", "product_category", "date", "sales"}
+            dictionary.loc[i, "used_for_analysis"] = role in {"material", "sales_org", "storage_location", "product_status", "unit", "product_category", "date", "sales", "hierarchy_level"}
             dictionary.loc[i, "purpose"] = "筛选 / 唯一键 / 单位校验 / 产品分组元数据"
         if name in by_name:
             period = by_name[name]
@@ -125,7 +125,10 @@ def run_pipeline(input_path, output_path, config, reference_date=None, inspect_o
                    "excluded_current_month": str(ref)[:7], "source_grain": grain, "source_sha256": digest,
                    "week_calendar": config.week_calendar, "adi_threshold": config.adi_threshold,
                    "cv2_threshold": config.cv2_threshold, "variance_ddof": config.variance_ddof,
-                   "random_seed": config.random_seed, "snapshot_status_without_historical_effective_dates": True}
+                   "random_seed": config.random_seed, "snapshot_status_without_historical_effective_dates": True,
+                   "excluded_hierarchy_levels": config.excluded_hierarchy_levels,
+                   "sales_measure": config.sales_measure, "returns_already_deducted": True,
+                   "price_table_available": False, "monetary_metrics_calculated": False}
         write_excel(output / "data_dictionary.xlsx", {"Fields": dictionary, "Structure": pd.DataFrame(structure),
                     "Field candidates": candidates, "Undated sales fields": pd.DataFrame(unknown)}, context)
         write_json(output / "period_columns.json", {"dated_actual_fields": periods, "excluded_undated_fields": unknown})
@@ -140,16 +143,20 @@ def run_pipeline(input_path, output_path, config, reference_date=None, inspect_o
         audit.append(count_stage("after_strict_complete_period_date_filter", dated))
         if dated.empty:
             raise ValueError("No source periods are fully inside the dynamic analysis window.")
+        hierarchy_kept, son_excluded, hierarchy_audit = filter_hierarchy(dated, config.excluded_hierarchy_levels)
+        source_without_son, source_son, source_hierarchy_audit = filter_hierarchy(source, config.excluded_hierarchy_levels)
+        audit.append(count_stage("after_excluding_all_son", hierarchy_kept))
+        audit.append(count_stage("source_after_excluding_all_son", source_without_son, "snapshot rows"))
         statuses_before_snapshot = source[["sku_id", "product_status"]].copy()
         statuses_before_snapshot["product_status"] = statuses_before_snapshot["product_status"].map(normalize_product_status)
         source_status_counts = status_counts(statuses_before_snapshot)
         source_status_counts["record_unit"] = "snapshot rows"
-        normalized_dated = dated.assign(product_status=dated["product_status"].map(normalize_product_status))
+        normalized_dated = hierarchy_kept.assign(product_status=hierarchy_kept["product_status"].map(normalize_product_status))
         conflict_counts = normalized_dated.groupby("sku_id")["product_status"].nunique(dropna=False)
         conflicts = conflict_counts[conflict_counts > 1].index
-        filtered, status_mapping, counts = filter_product_status(dated, config.allowed_product_status)
+        filtered, status_mapping, counts = filter_product_status(hierarchy_kept, config.allowed_product_status)
         audit.append(count_stage("after_allowed_product_status_filter", filtered))
-        filtered_source = source.loc[source["product_status"].map(normalize_product_status).isin(config.allowed_product_status)]
+        filtered_source = source_without_son.loc[source_without_son["product_status"].map(normalize_product_status).isin(config.allowed_product_status)]
         audit.append(count_stage("allowed_status_snapshot_rows", filtered_source, "snapshot rows"))
         clean, quality, quarantined, reasons = quality_check(filtered, grain, bool(periods), conflicts)
         audit.append(count_stage("after_quality_quarantine", clean))
@@ -161,17 +168,20 @@ def run_pipeline(input_path, output_path, config, reference_date=None, inspect_o
         audit_frame = pd.DataFrame(audit)
         exclusions = pd.DataFrame([
             {"reason": "date outside window or partial boundary period", "records": len(long) - len(dated)},
-            {"reason": "product status not allowed", "records": len(dated) - len(filtered)},
+            {"reason": "all Son rows excluded", "records": len(son_excluded)},
+            {"reason": "product status not allowed after Son exclusion", "records": len(hierarchy_kept) - len(filtered)},
             {"reason": "data quality quarantine", "records": len(filtered) - len(clean)}])
         period_audit = pd.DataFrame([{**p, "included": p["start"] >= start and p["end"] <= end and p["grain"] == grain}
                                     for p in periods])
         write_excel(output / "filter_audit.xlsx", {"Filter stages": audit_frame, "Status counts": counts,
                     "Source status counts": source_status_counts, "Status mapping": status_mapping,
+                    "Hierarchy filter": hierarchy_audit, "Source hierarchy": source_hierarchy_audit,
                     "Exclusions": exclusions, "Source periods": period_audit}, context)
         inventory_limits = pd.DataFrame([
             {"field_family": "inventory / transit / backorder", "usable": False, "reason": "No historical as-of dates; snapshots excluded from window-limited analysis"},
             {"field_family": "company forecast", "usable": False, "reason": "No issued_at / forecast_version; historical leakage cannot be excluded"},
-            {"field_family": "sales units", "usable": "unit" in mapping, "reason": "Units/conversions must be confirmed before combining SKU quantities or value analysis"}])
+                    {"field_family": "sales units", "usable": "unit" in mapping, "reason": "Units/conversions must be confirmed before combining SKU quantities or value analysis"},
+                    {"field_family": "price table / monetary metrics", "usable": False, "reason": "No prices used: forecasts and MAE/Bias are quantities; WAPE has no monetary weight"}])
         write_excel(output / "data_quality_report.xlsx", {"Quality findings": quality, "Quarantined SKUs": reasons,
                     "Coverage": pd.DataFrame([{"first_date": panel["date"].min(), "last_date": panel["date"].max(),
                     "last_period_end": panel["period_end"].max(), "periods": panel["date"].nunique(),
@@ -180,6 +190,7 @@ def run_pipeline(input_path, output_path, config, reference_date=None, inspect_o
                     "Unavailable inputs": inventory_limits}, context)
         write_csv(output / "cleaned_last_12_complete_months.csv", panel)
         write_csv(output / "quarantined_records.csv", quarantined)
+        write_csv(output / "excluded_son_records.csv", son_excluded)
         classification, class_summary = classify_skus(panel, config)
         logger.info("Classified %s eligible SKUs over %s periods", len(classification), panel["date"].nunique())
         formulas = pd.DataFrame([
@@ -187,8 +198,13 @@ def run_pipeline(input_path, output_path, config, reference_date=None, inspect_o
             {"item": "CV2", "formula_or_rule": "Var(D+, ddof=config.variance_ddof) / Mean(D+)^2"},
             {"item": "Boundary", "formula_or_rule": "Equal to threshold belongs to high ADI / high CV2"},
             {"item": "Singleton positive", "formula_or_rule": "CV2=0 provisional, cv2_reliable=False"},
-            {"item": "Zero", "formula_or_rule": "all true observed demand equals zero"}])
-        write_excel(output / "sku_classification.xlsx", {"Summary": class_summary, "SKU classification": classification, "Definitions": formulas}, context)
+            {"item": "Zero", "formula_or_rule": "every raw net sales observation equals zero; return-only series are unclassified"},
+            {"item": "Net sales", "formula_or_rule": "Returns already deducted in booking period; no second deduction or negative-value clipping"},
+            {"item": "Price", "formula_or_rule": "No price table: no revenue, inventory value, profit, or cost calculations"}])
+        unclassified = classification.loc[classification["demand_type"].isna()]
+        context["unclassified_return_only_skus"] = len(unclassified)
+        write_excel(output / "sku_classification.xlsx", {"Summary": class_summary, "SKU classification": classification,
+                    "Unclassified return only": unclassified, "Definitions": formulas}, context)
         outlier_summary, outlier_points = compare_outliers(panel, config)
         write_excel(output / "outlier_comparison.xlsx", {"SKU comparison": outlier_summary, "Flagged periods": outlier_points}, context)
         write_csv(output / "outlier_flagged_periods.csv", outlier_points)
@@ -199,7 +215,7 @@ def run_pipeline(input_path, output_path, config, reference_date=None, inspect_o
         if analysis_grain == "weekly":
             logger.info("Starting rolling validation and independent 16-week test")
             evaluation = run_forecasts(panel, config, logger, ref)
-            for name in ("validation_detail", "test_detail", "forecast_16_weeks", "selected_models", "window_availability"):
+            for name in ("validation_detail", "test_detail", "forecast_16_weeks", "selected_models", "window_availability", "method_applicability"):
                 write_csv(output / f"{name}.csv", evaluation[name])
         company = pd.DataFrame([{"method": "CompanyForecast", "status": "unavailable / not comparable",
                                  "reason": "Missing issued_at and archived forecast versions; current snapshot excluded"}])
@@ -209,6 +225,7 @@ def run_pipeline(input_path, output_path, config, reference_date=None, inspect_o
             "Candidate test comparison": evaluation.get("test_summary", pd.DataFrame()),
             "Selected SKU test": evaluation.get("selected_test", pd.DataFrame()),
             "Selected models": evaluation.get("selected_models", pd.DataFrame()),
+            "Method applicability": evaluation.get("method_applicability", pd.DataFrame()),
             "Unavailable baseline": company}, context)
         text = summary_text(context, audit_frame, class_summary, panel, plan, evaluation, quality)
         (output / "analysis_summary.md").write_text(text, encoding="utf-8")

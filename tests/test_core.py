@@ -8,11 +8,11 @@ import numpy as np
 import openpyxl
 import pandas as pd
 from replenishment.classification import classify_series, classify_skus
-from replenishment.cleaning import complete_panel, numeric
+from replenishment.cleaning import complete_panel, numeric, filter_hierarchy
 from replenishment.config import Config
 from replenishment.evaluation import metrics, run_forecasts, window_plan
 from replenishment.excel_io import SchemaError, identifier, identify_fields, parse_headers, sha256
-from replenishment.forecasting import forecast
+from replenishment.forecasting import forecast, method_applicable
 from replenishment.outliers import outlier_versions, sens_slope
 from replenishment.periods import filter_dates, get_analysis_period, parse_period_label
 from replenishment.pipeline import REQUIRED, run_pipeline
@@ -155,6 +155,44 @@ class EstimationTests(unittest.TestCase):
         # Interval between positive events at indices 0 and 2 is two periods.
         self.assertAlmostEqual(forecast([10, 0, 10], "Croston", 1)[0], 10 / 1.1)
 
+    def test_ignore_all_son_without_combining_parent(self):
+        data = pd.DataFrame({"sku_id": ["a", "a", "b", "c", "d"],
+                             "hierarchy_level": ["Parent", "  SON ", "son", "Son", "Sonic"],
+                             "sales": [10, 99, 20, 30, 8]})
+        kept, removed, audit = filter_hierarchy(data)
+        self.assertEqual(kept["sales"].tolist(), [10, 8])
+        self.assertEqual(len(removed), 3)
+        self.assertEqual(audit["records"].sum(), 5)
+        with self.assertRaises(SchemaError):
+            filter_hierarchy(data.drop(columns="hierarchy_level"))
+
+    def test_negative_net_sales_are_not_clipped_in_training(self):
+        values = np.array([10.0, -8.0])
+        self.assertEqual(forecast(values, "MovingAverage", 1)[0], 1.0)
+        self.assertAlmostEqual(forecast(values, "SES", 1, alpha=0.5)[0], 1.0)
+        self.assertEqual(forecast([-10, -8], "MovingAverage", 1)[0], 0.0)
+        for method in ("Croston", "SBA", "TSB"):
+            self.assertFalse(method_applicable(values, method))
+            with self.assertRaises(ValueError):
+                forecast(values, method, 1)
+        versions = outlier_versions(values, self.config)[0]
+        for variant in versions.values():
+            np.testing.assert_array_equal(variant, values)
+
+    def test_return_only_is_not_zero_demand(self):
+        result = classify_series([0, -2, 0, -1], self.config)
+        self.assertTrue(pd.isna(result["demand_type"]))
+        self.assertEqual(result["classification_status"], "not_classifiable_return_only")
+        self.assertEqual(result["negative_net_periods"], 2)
+        self.assertEqual(classify_series([0, 0], self.config)["demand_type"], "Zero")
+        self.assertTrue(classify_series([0, 10, -2, 0], self.config)["classification_provisional_due_to_returns"])
+
+    def test_signed_net_sales_metrics(self):
+        result = metrics([10, -2], [8, 0])
+        self.assertAlmostEqual(result["mae"], 2)
+        self.assertAlmostEqual(result["wape"], 4 / 12)
+        self.assertEqual(result["bias"], 0)
+
     def test_metrics_zero_denominator(self):
         score = metrics([0, 0], [1, 1])
         self.assertEqual(score["mae"], 1)
@@ -193,6 +231,22 @@ class EstimationTests(unittest.TestCase):
         self.assertEqual(one["forecast_16_weeks"]["week_start"].min(), pd.Timestamp("2026-10-26"))
         self.assertEqual(one["forecast_16_weeks"]["week_start"].nunique(), 16)
 
+    def test_future_returns_do_not_change_historical_selection(self):
+        def panel(y):
+            dates = pd.date_range("2025-11-17", periods=len(y), freq="W-MON")
+            return pd.DataFrame({"sku_id": "test", "material": "001", "product_status": "Normal", "date": dates,
+                                 "period_end": dates + pd.Timedelta(days=6), "sales": y})
+        a = np.array([0, 0, 10, 0, 0] * 9, dtype=float)
+        b = a.copy()
+        b[35] = -10
+        one = run_forecasts(panel(a), self.config, logging.getLogger("test"), "2026-10-23")
+        two = run_forecasts(panel(b), self.config, logging.getLogger("test"), "2026-10-23")
+        columns = ["historical_selected_window", "historical_selected_version", "historical_selected_method"]
+        pd.testing.assert_frame_equal(one["selected_models"][columns], two["selected_models"][columns])
+        pd.testing.assert_frame_equal(one["validation_detail"], two["validation_detail"])
+        self.assertTrue(two["method_applicability"]["phase"].eq("final_refit").any())
+        self.assertEqual(two["selected_models"]["negative_net_periods"].iloc[0], 1)
+
 
 def make_fixture(path, monthly=False):
     """Small, clearly isolated synthetic source used only to exercise code paths."""
@@ -201,11 +255,14 @@ def make_fixture(path, monthly=False):
     sheet.title = "Test"
     dates = pd.date_range("2025-10-01", periods=13, freq="MS") if monthly else pd.date_range("2025-11-17", periods=49, freq="W-MON")
     labels = [str(d.to_period("M")) if monthly else f"{d.isocalendar().year}'{d.isocalendar().week}" for d in dates]
-    sheet.append(["Metadata"] * 4 + ["Actual"] * len(labels))
-    sheet.append(["Material", "Sales organization", "Storage location", "Product status"] + labels)
-    for sku, status, amount in [("001", "NORMAL", 10), ("002", "phasing  OUT", 5), ("003", "Normal", 0),
-                                ("004", "EOL", 99), ("005", "Normal", -1), ("006", "Normal", 3), ("006", "Normal", 4)]:
-        sheet.append([sku, "Org", "", status] + [amount] * len(labels))
+    sheet.append(["Metadata"] * 5 + ["Actual"] * len(labels))
+    sheet.append(["Material", "Sales organization", "Storage location", "Product status", "Hierarchy level"] + labels)
+    for sku, status, amount, level in [("001", "NORMAL", 10, "Parent"), ("002", "phasing  OUT", 5, "Parent"),
+                                      ("003", "Normal", 0, "Parent"), ("004", "EOL", 99, "Parent"),
+                                      ("005", "Normal", -1, "Parent"), ("006", "Normal", 3, "Parent"),
+                                      ("006", "Normal", 4, "Son"), ("007", "Normal", 500, "Son"),
+                                      ("008", "Normal", 2, "Parent"), ("008", "Normal", 3, "Parent")]:
+        sheet.append([sku, "Org", "", status, level] + [amount] * len(labels))
     book.save(path)
 
 
@@ -219,13 +276,18 @@ class PipelineTests(unittest.TestCase):
             cfg = Config(sheet="Test", actual_sales_group="Actual")
             first = run_pipeline(source, folder / "output", cfg, "2026-10-23")
             self.assertEqual(first["status"], "success")
-            self.assertEqual(first["final_skus"], 3)
+            self.assertEqual(first["final_skus"], 5)
             self.assertEqual(first["available_periods"], 45)
             self.assertEqual(before, sha256(source))
             for filename in REQUIRED:
                 self.assertTrue((folder / "output" / filename).is_file())
             cleaned = pd.read_csv(folder / "output" / "cleaned_last_12_complete_months.csv", dtype={"material": "string"})
-            self.assertEqual(set(cleaned["material"]), {"001", "002", "003"})
+            self.assertEqual(set(cleaned["material"]), {"001", "002", "003", "005", "006"})
+            self.assertTrue(cleaned.loc[cleaned["material"].eq("005"), "sales"].eq(-1).all())
+            self.assertTrue(cleaned.loc[cleaned["material"].eq("006"), "sales"].eq(3).all())
+            self.assertTrue(cleaned["hierarchy_level"].eq("Parent").all())
+            self.assertFalse(first["context"]["monetary_metrics_calculated"])
+            self.assertEqual(first["context"]["sales_measure"], "net_sales_quantity")
             self.assertEqual(set(cleaned["product_status"]), {"Normal", "Phasing Out"})
             repeat = run_pipeline(source, folder / "output", cfg, "2026-10-23")
             self.assertEqual(repeat["filters"], first["filters"])

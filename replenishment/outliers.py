@@ -13,8 +13,8 @@ def sens_slope(y):
 
 def fit_outlier_rule(values, config):
     y = np.asarray(values, dtype=float)
-    if not len(y) or not np.isfinite(y).all() or (y < 0).any():
-        raise ValueError("Outlier estimation requires nonnegative finite training data.")
+    if not len(y) or not np.isfinite(y).all():
+        raise ValueError("Outlier estimation requires finite training net sales.")
     split = len(y) // 2
     left = float(np.median(y[:split])) if split else float(y[0])
     right = float(np.median(y[split:]))
