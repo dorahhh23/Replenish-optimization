@@ -1,0 +1,24 @@
+{
+  "negative_sales_policy": "Negative sales are returns; retain original values without adjustment",
+  "zero_threshold": 0.6,
+  "overall_methods": [
+    "Empirical",
+    "Recent13",
+    "DampedTrendResidual",
+    "LightGBM"
+  ],
+  "count_models": "Supplemental CountEligible result tables compare six methods on applicable common populations",
+  "grouping": "Five demand groups only; returns do not create a separate group; Zero>=60%",
+  "denominator": "max(median(abs(nonzero training sales)) per SKU, 1 unit)",
+  "mean": "All scored points; covered points contribute zero",
+  "intervals": [
+    70,
+    80,
+    90
+  ],
+  "complete_training_skus": 6464,
+  "input_prediction_sha256": {
+    "main_W42": "ef2b7e71cba7c4b3f53f46d1015df6f629e33360045266e9854d7091956717a2",
+    "sensitivity_W43": "95dac5110ff3d0954530d09b9f0f2f22bfed473a7bf250c2b9f68928ef8cfe4d"
+  }
+}

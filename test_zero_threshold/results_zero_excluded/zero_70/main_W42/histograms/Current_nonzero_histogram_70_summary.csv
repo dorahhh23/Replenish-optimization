@@ -1,0 +1,5 @@
+﻿threshold,case,table_id,interval_level,method,outside_points,below_lower_bound,above_upper_bound,negative_actual_outside_points
+0.7,main_W42,Current_nonzero,70,Empirical,5733,1735,3998,93
+0.7,main_W42,Current_nonzero,70,Recent13,4878,1470,3408,91
+0.7,main_W42,Current_nonzero,70,DampedTrendResidual,12892,8504,4388,72
+0.7,main_W42,Current_nonzero,70,LightGBM,5295,1894,3401,93

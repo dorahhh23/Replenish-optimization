@@ -1,0 +1,7 @@
+﻿case,interval_level,normalization,method,outside_points,below_lower_bound,above_upper_bound,below_share,negative_actual_outside_points,signed_p05,signed_median,signed_p95,absolute_median,absolute_p90,absolute_p95,minimum_signed_distance,maximum_signed_distance
+sensitivity_W43,80,interval_width,Empirical,11870,1037,10833,0.087363100252738,128,-0.0434782608695652,2.0,53.0,2.0,30.0,54.0,-157.0,3850.0
+sensitivity_W43,80,interval_width,Recent13,12871,1569,11302,0.12190195012042576,126,-0.0975609756097561,2.0,51.0,2.0,27.875,51.0,-157.0,3850.0
+sensitivity_W43,80,interval_width,DampedTrendResidual,17609,6433,11176,0.3653245499460503,106,-0.31290593152800183,1.0,40.0,1.0,20.0,40.0,-157.0,3850.0
+sensitivity_W43,80,interval_width,LightGBM,10647,315,10332,0.029585798816568046,128,0.06736244973710663,3.0,60.0,3.0,32.0,60.0,-157.0,3850.0
+sensitivity_W43,80,interval_width,Poisson,24825,11812,13013,0.47581067472306143,118,-2.2777777777777777,0.375,29.0,1.3888888888888888,13.433928571428591,29.747407407407216,-157.0,3850.0
+sensitivity_W43,80,interval_width,NegativeBinomial,12315,1675,10640,0.13601299228583028,118,-0.0588235294117647,2.0,52.0,2.0,28.0,52.0,-157.0,3850.0

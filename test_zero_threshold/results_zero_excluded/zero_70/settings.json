@@ -1,0 +1,21 @@
+{
+  "threshold": 0.7,
+  "minimum_zero_weeks": 26,
+  "training_weeks": 36,
+  "training_start": "2025-W41",
+  "training_end": "2026-W24",
+  "max_horizon": 19,
+  "fresh_lightgbm_fit": true,
+  "seed": 20261030,
+  "max_rounds": 200,
+  "threads": 2,
+  "zero_policy": "Excluded from fitting, prediction, and evaluation",
+  "zero_list_skus": 4979,
+  "modeled_skus": 1485,
+  "group_counts": {
+    "Lumpy": 849,
+    "Erratic": 484,
+    "Smooth": 95,
+    "Intermittent": 57
+  }
+}

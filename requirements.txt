@@ -1,0 +1,6 @@
+numpy>=1.22
+pandas>=2.0
+scipy>=1.10
+matplotlib>=3.6
+lightgbm==4.6.0
+Pillow>=10.0

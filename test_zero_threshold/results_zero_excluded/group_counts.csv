@@ -1,0 +1,17 @@
+﻿threshold,minimum_zero_weeks,demand_group,skus,skus_with_negative_training
+0.6,22,Smooth,95,13
+0.6,22,Erratic,484,50
+0.6,22,Intermittent,23,1
+0.6,22,Lumpy,604,55
+0.7,26,Smooth,95,13
+0.7,26,Erratic,484,50
+0.7,26,Intermittent,57,3
+0.7,26,Lumpy,849,70
+0.8,29,Smooth,95,13
+0.8,29,Erratic,484,50
+0.8,29,Intermittent,119,3
+0.8,29,Lumpy,1056,79
+0.9,33,Smooth,95,13
+0.9,33,Erratic,484,50
+0.9,33,Intermittent,332,7
+0.9,33,Lumpy,1466,91

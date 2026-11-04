@@ -1,0 +1,25 @@
+﻿Zero Threshold,Case,Table,Sample Policy,Model,Cohort SKUs,Scored SKUs,Observed Points,Negative Actuals,70% Mean Normalized Outside Distance,80% Mean Normalized Outside Distance,90% Mean Normalized Outside Distance
+0.6,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Empirical,1087,1087,19521,70,0.4226389409392111,0.3076186928929264,0.1750576791885734
+0.6,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Recent13,1087,1087,19521,70,0.3596316587089715,0.3596316587089715,0.20287993656785797
+0.6,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,1087,1087,19521,70,0.5678444752225891,0.4587724426988186,0.33715271972969924
+0.6,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,LightGBM,1087,1087,19521,70,0.3572448052535258,0.25850911793478376,0.157847875474911
+0.6,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Poisson,1087,1087,19521,70,0.9422246996753479,0.8819591302579016,0.8018266804497557
+0.6,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,NegativeBinomial,1087,1087,19521,70,0.4171154604750349,0.3174486143157491,0.20722512291757778
+0.7,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Empirical,1349,1349,24217,83,0.4475949466392186,0.32845108384639904,0.1886828298615599
+0.7,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Recent13,1349,1349,24217,83,0.38479238975281355,0.38479238975281355,0.21733415225811464
+0.7,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,1349,1349,24217,83,0.5938679565099332,0.4843064857604715,0.3606182746577621
+0.7,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,LightGBM,1349,1349,24217,83,0.3742322934719801,0.2655063720378864,0.1586065575529576
+0.7,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Poisson,1349,1349,24217,83,0.9069788606076801,0.8469874516592956,0.7678525637909731
+0.7,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,NegativeBinomial,1349,1349,24217,83,0.44044414617947697,0.3380799246619151,0.22134726537912383
+0.8,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Empirical,1609,1609,28872,89,0.43699140423463234,0.32357783910422677,0.1830580800502452
+0.8,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Recent13,1609,1609,28872,89,0.37325680187410276,0.37325680187410276,0.20791986855992395
+0.8,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,1609,1609,28872,89,0.5923435621113103,0.4850789186547411,0.36097872709683276
+0.8,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,LightGBM,1609,1609,28872,89,0.3666584855274902,0.25662182592099486,0.14372697635159182
+0.8,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Poisson,1609,1609,28872,89,0.8394314575994747,0.7822809401143097,0.7082366500189982
+0.8,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,NegativeBinomial,1609,1609,28872,89,0.43006084365737873,0.3315170646479725,0.21597207458239162
+0.9,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Empirical,2216,2216,39738,102,0.4338287481939976,0.3313294424559553,0.19872010355744513
+0.9,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Recent13,2216,2216,39738,102,0.3702605602376046,0.3702605602376046,0.20931696268797925
+0.9,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,2216,2216,39738,102,0.5724572077011312,0.47824980880529355,0.36499690562736165
+0.9,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,LightGBM,2216,2216,39738,102,0.3838479419096369,0.266841985282301,0.1519987376793424
+0.9,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,Poisson,2216,2216,39738,102,0.7233146085156028,0.6762492880035805,0.6148197788902732
+0.9,main_W42,Count_eligible_nonzero,Current threshold non-Zero sample; varies with threshold,NegativeBinomial,2216,2216,39738,102,0.4236586589898624,0.33744586039814645,0.23154652283346938

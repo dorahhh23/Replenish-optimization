@@ -1,0 +1,399 @@
+{
+  "python": "C:\\Users\\Public\\anaconda3\\python.exe",
+  "python_version": "3.14.6",
+  "numpy": "2.4.6",
+  "pandas": "3.0.3",
+  "scipy": "1.18.0",
+  "lightgbm": "4.6.0",
+  "matplotlib": "3.11.0",
+  "config": {
+    "thresholds": [
+      0.5,
+      0.6,
+      0.7,
+      0.8
+    ],
+    "input": "../input/weekly_sales.csv",
+    "output": "results_zero_excluded",
+    "zero_policy": "Exclude Zero SKUs from fitting, prediction, and all evaluation; export zero lists only",
+    "max_rounds": 200,
+    "threads": 2,
+    "seed": 20261030,
+    "include_week43_sensitivity": true,
+    "dpi": 160
+  },
+  "input_path": "C:\\Users\\yizhe.hu\\Documents\\ChatGPT\\\u6bd5\u8bbe\\Bexperiment\\input\\weekly_sales.csv",
+  "thresholds": [
+    0.6,
+    0.7,
+    0.8,
+    0.9
+  ],
+  "training_runs": [
+    {
+      "threshold": 0.6,
+      "training_log": [
+        {
+          "group": "Erratic",
+          "skus": 484,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 128744,
+          "internal_fit_rows": 74052,
+          "validation_rows": 2904,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            11,
+            1,
+            3,
+            18,
+            19
+          ],
+          "quantile_crossings_repaired": 0
+        },
+        {
+          "group": "Intermittent",
+          "skus": 23,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 6118,
+          "internal_fit_rows": 3519,
+          "validation_rows": 138,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            38,
+            1,
+            1,
+            14
+          ],
+          "quantile_crossings_repaired": 0
+        },
+        {
+          "group": "Lumpy",
+          "skus": 604,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 160664,
+          "internal_fit_rows": 92412,
+          "validation_rows": 3624,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            22,
+            16,
+            20,
+            14
+          ],
+          "quantile_crossings_repaired": 19
+        },
+        {
+          "group": "Smooth",
+          "skus": 95,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 25270,
+          "internal_fit_rows": 14535,
+          "validation_rows": 570,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            30,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "quantile_crossings_repaired": 0
+        }
+      ]
+    },
+    {
+      "threshold": 0.7,
+      "training_log": [
+        {
+          "group": "Erratic",
+          "skus": 484,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 128744,
+          "internal_fit_rows": 74052,
+          "validation_rows": 2904,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            11,
+            1,
+            3,
+            18,
+            19
+          ],
+          "quantile_crossings_repaired": 0
+        },
+        {
+          "group": "Intermittent",
+          "skus": 57,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 15162,
+          "internal_fit_rows": 8721,
+          "validation_rows": 342,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            1,
+            3,
+            2,
+            30
+          ],
+          "quantile_crossings_repaired": 38
+        },
+        {
+          "group": "Lumpy",
+          "skus": 849,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 225834,
+          "internal_fit_rows": 129897,
+          "validation_rows": 5094,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            46,
+            13,
+            8,
+            16
+          ],
+          "quantile_crossings_repaired": 19
+        },
+        {
+          "group": "Smooth",
+          "skus": 95,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 25270,
+          "internal_fit_rows": 14535,
+          "validation_rows": 570,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            30,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "quantile_crossings_repaired": 0
+        }
+      ]
+    },
+    {
+      "threshold": 0.8,
+      "training_log": [
+        {
+          "group": "Erratic",
+          "skus": 484,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 128744,
+          "internal_fit_rows": 74052,
+          "validation_rows": 2904,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            11,
+            1,
+            3,
+            18,
+            19
+          ],
+          "quantile_crossings_repaired": 0
+        },
+        {
+          "group": "Intermittent",
+          "skus": 119,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 31654,
+          "internal_fit_rows": 18207,
+          "validation_rows": 714,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            1,
+            24,
+            35,
+            30
+          ],
+          "quantile_crossings_repaired": 0
+        },
+        {
+          "group": "Lumpy",
+          "skus": 1056,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 280896,
+          "internal_fit_rows": 161568,
+          "validation_rows": 6336,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            142,
+            6,
+            15,
+            13
+          ],
+          "quantile_crossings_repaired": 89
+        },
+        {
+          "group": "Smooth",
+          "skus": 95,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 25270,
+          "internal_fit_rows": 14535,
+          "validation_rows": 570,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            30,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "quantile_crossings_repaired": 0
+        }
+      ]
+    },
+    {
+      "threshold": 0.9,
+      "training_log": [
+        {
+          "group": "Erratic",
+          "skus": 484,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 128744,
+          "internal_fit_rows": 74052,
+          "validation_rows": 2904,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            11,
+            1,
+            3,
+            18,
+            19
+          ],
+          "quantile_crossings_repaired": 0
+        },
+        {
+          "group": "Intermittent",
+          "skus": 332,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 88312,
+          "internal_fit_rows": 50796,
+          "validation_rows": 1992,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            1,
+            123,
+            72,
+            40
+          ],
+          "quantile_crossings_repaired": 526
+        },
+        {
+          "group": "Lumpy",
+          "skus": 1466,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 389956,
+          "internal_fit_rows": 224298,
+          "validation_rows": 8796,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            1,
+            1,
+            44,
+            2,
+            9,
+            4
+          ],
+          "quantile_crossings_repaired": 57
+        },
+        {
+          "group": "Smooth",
+          "skus": 95,
+          "implementation": "Grouped LightGBM quantile regression",
+          "supervised_rows": 25270,
+          "internal_fit_rows": 14535,
+          "validation_rows": 570,
+          "last_internal_fit_target": "2026-W18",
+          "first_validation_target": "2026-W19",
+          "final_fit_end": "2026-W24",
+          "selected_rounds": [
+            1,
+            30,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "quantile_crossings_repaired": 0
+        }
+      ]
+    }
+  ],
+  "zero_policy": "Exclude Zero SKUs from fitting, prediction, and evaluation",
+  "source_hashes": {
+    "engine\\lightgbm_features.py": "cdd59d528c55a38c52c8e479f3797884c96ae872eb1a4d7732c3785c28637423",
+    "engine\\make_combined_charts.py": "07b6b140c8ec3dfc9cc4c4520f2026c3ef8ce063b5d22a66a41e671106765111",
+    "engine\\run_b_experiment.py": "8d9c47229b15a91c164106b0e3adc64499d4e2398d006b32af77e337516d0ff1",
+    "run_experiment.py": "593d3af723c3526bc400d54c7114235a35a482121e9d505a44730db172148873",
+    "plot_results.py": "75fa7a5845ebd36335349e98441b8326284040cd1a504a5dcf27a34dc38d74c2",
+    "plot_outliers.py": "fa2a2763c9706f81cb3f2b70b795326faede14ca4c818667c2925be09e7d7d14"
+  }
+}

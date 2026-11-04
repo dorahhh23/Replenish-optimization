@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "group_counts": {
+    "Zero": 5258,
+    "Lumpy": 604,
+    "Erratic": 484,
+    "Smooth": 95,
+    "Intermittent": 23
+  },
+  "reassigned_skus": 119,
+  "negative_training_skus": 182,
+  "raw_returns_unchanged": true,
+  "png_files_verified": 98,
+  "histograms_verified": 18,
+  "cases": [
+    {
+      "case": "main_W42",
+      "skus": 6464,
+      "observations_per_full_method": 115992,
+      "retained_negative_actuals_per_full_method": 127,
+      "outside_rows_all_intervals": 256038
+    },
+    {
+      "case": "sensitivity_W43",
+      "skus": 6464,
+      "observations_per_full_method": 122384,
+      "retained_negative_actuals_per_full_method": 128,
+      "outside_rows_all_intervals": 269250
+    }
+  ]
+}

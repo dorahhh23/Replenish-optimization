@@ -1,0 +1,69 @@
+Python: C:\Users\Public\anaconda3\python.exe
+Input: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\input\weekly_sales.csv
+Output: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results
+
+=== Zero threshold 50%: fresh model fitting ===
+LightGBM Erratic: 484 SKUs; seven quantiles
+LightGBM Intermittent: 11 SKUs; seven quantiles
+LightGBM Lumpy: 398 SKUs; seven quantiles
+LightGBM Smooth: 95 SKUs; seven quantiles
+
+=== Zero threshold 60%: fresh model fitting ===
+LightGBM Erratic: 484 SKUs; seven quantiles
+LightGBM Intermittent: 23 SKUs; seven quantiles
+LightGBM Lumpy: 604 SKUs; seven quantiles
+LightGBM Smooth: 95 SKUs; seven quantiles
+
+=== Zero threshold 70%: fresh model fitting ===
+LightGBM Erratic: 484 SKUs; seven quantiles
+LightGBM Intermittent: 57 SKUs; seven quantiles
+LightGBM Lumpy: 849 SKUs; seven quantiles
+LightGBM Smooth: 95 SKUs; seven quantiles
+
+=== Zero threshold 80%: fresh model fitting ===
+LightGBM Erratic: 484 SKUs; seven quantiles
+LightGBM Intermittent: 119 SKUs; seven quantiles
+LightGBM Lumpy: 1056 SKUs; seven quantiles
+LightGBM Smooth: 95 SKUs; seven quantiles
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\All_SKUs_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\All_SKUs_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Current_nonzero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Current_nonzero_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Fixed_60_nonzero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Fixed_60_nonzero_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Common_count_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Common_count_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Common_count_fixed_60_nonzero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Common_count_fixed_60_nonzero_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Smooth_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Smooth_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Erratic_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Erratic_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Intermittent_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Intermittent_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Lumpy_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Lumpy_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Zero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\main_W42\figures\Zero_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\All_SKUs_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\All_SKUs_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Current_nonzero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Current_nonzero_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Fixed_60_nonzero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Fixed_60_nonzero_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Common_count_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Common_count_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Common_count_fixed_60_nonzero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Common_count_fixed_60_nonzero_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Smooth_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Smooth_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Erratic_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Erratic_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Intermittent_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Intermittent_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Lumpy_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Lumpy_deviation.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Zero_width_coverage.png
+Saved: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results\sensitivity_W43\figures\Zero_deviation.png
+
+COMPLETED: all validation checks passed. Results: C:\Users\yizhe.hu\Documents\ChatGPT\毕设\Bexperiment\test_zero_threshold\results

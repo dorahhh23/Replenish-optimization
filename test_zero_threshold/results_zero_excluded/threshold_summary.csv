@@ -1,0 +1,5 @@
+﻿threshold,minimum_zero_weeks,complete_training_skus,zero_list_skus,modeled_skus,count_eligible_nonzero_skus,negative_training_values_retained,negative_training_skus_retained
+0.6,22,6464,5258,1206,1087,125,119
+0.7,26,6464,4979,1485,1349,142,136
+0.8,29,6464,4710,1754,1609,151,145
+0.9,33,6464,4087,2377,2216,169,161

@@ -1,0 +1,9 @@
+﻿case_observations,sku_week_actual_sha256,negative_actuals_per_primary_method,missing_actuals_not_scored,maximum_actual,minimum_actual,zero_intervals_verified,signed_actuals_match_input,count_methods_share_fixed_applicable_sample,normalization_verified,threshold,case
+115992,d62fd5ff5194318bafa58c3efa9b99d8fd5f10f4c0c3790c7c8633892e3129a1,127,360,16723.0,-984.0,True,True,True,True,0.5,main_W42
+122384,e8ddcd1a427aaeaaa889ff44b33b34a06c30016f6b97a07162b57bc174c0356f,128,432,16723.0,-984.0,True,True,True,True,0.5,sensitivity_W43
+115992,d62fd5ff5194318bafa58c3efa9b99d8fd5f10f4c0c3790c7c8633892e3129a1,127,360,16723.0,-984.0,True,True,True,True,0.6,main_W42
+122384,e8ddcd1a427aaeaaa889ff44b33b34a06c30016f6b97a07162b57bc174c0356f,128,432,16723.0,-984.0,True,True,True,True,0.6,sensitivity_W43
+115992,d62fd5ff5194318bafa58c3efa9b99d8fd5f10f4c0c3790c7c8633892e3129a1,127,360,16723.0,-984.0,True,True,True,True,0.7,main_W42
+122384,e8ddcd1a427aaeaaa889ff44b33b34a06c30016f6b97a07162b57bc174c0356f,128,432,16723.0,-984.0,True,True,True,True,0.7,sensitivity_W43
+115992,d62fd5ff5194318bafa58c3efa9b99d8fd5f10f4c0c3790c7c8633892e3129a1,127,360,16723.0,-984.0,True,True,True,True,0.8,main_W42
+122384,e8ddcd1a427aaeaaa889ff44b33b34a06c30016f6b97a07162b57bc174c0356f,128,432,16723.0,-984.0,True,True,True,True,0.8,sensitivity_W43

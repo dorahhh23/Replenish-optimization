@@ -1,0 +1,65 @@
+{
+  "status": "passed",
+  "metric_rows_independently_recomputed": 1056,
+  "saved_models_loaded_and_predictions_verified": 112,
+  "png_files_verified": 40,
+  "model_files_differing_from_60_percent": {
+    "zero_50": 14,
+    "zero_60": 0,
+    "zero_70": 14,
+    "zero_80": 14
+  },
+  "original_files_unchanged": true,
+  "threshold_boundary_checks": true,
+  "missing_and_signed_actuals_verified": true,
+  "audits": [
+    {
+      "threshold": 0.5,
+      "case": "main_W42",
+      "observations": 115992,
+      "negative_actuals": 127
+    },
+    {
+      "threshold": 0.5,
+      "case": "sensitivity_W43",
+      "observations": 122384,
+      "negative_actuals": 128
+    },
+    {
+      "threshold": 0.6,
+      "case": "main_W42",
+      "observations": 115992,
+      "negative_actuals": 127
+    },
+    {
+      "threshold": 0.6,
+      "case": "sensitivity_W43",
+      "observations": 122384,
+      "negative_actuals": 128
+    },
+    {
+      "threshold": 0.7,
+      "case": "main_W42",
+      "observations": 115992,
+      "negative_actuals": 127
+    },
+    {
+      "threshold": 0.7,
+      "case": "sensitivity_W43",
+      "observations": 122384,
+      "negative_actuals": 128
+    },
+    {
+      "threshold": 0.8,
+      "case": "main_W42",
+      "observations": 115992,
+      "negative_actuals": 127
+    },
+    {
+      "threshold": 0.8,
+      "case": "sensitivity_W43",
+      "observations": 122384,
+      "negative_actuals": 128
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+﻿Zero Threshold,Case,Table,Sample Policy,Model,Cohort SKUs,Scored SKUs,Observed Points,Negative Actuals,70% Mean Normalized Outside Distance,80% Mean Normalized Outside Distance,90% Mean Normalized Outside Distance
+0.6,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Empirical,95,95,1710,4,0.2103862044271957,0.1498871964820238,0.09138719543864689
+0.6,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Recent13,95,95,1710,4,0.1712959182434106,0.1712959182434106,0.09755157718048084
+0.6,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,95,95,1710,4,0.23291540650653023,0.19260822120172275,0.15261343752863846
+0.6,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,LightGBM,95,95,1710,4,0.16566474877091114,0.11548581807086429,0.08224802978840091
+0.7,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Empirical,95,95,1710,4,0.2103862044271957,0.1498871964820238,0.09138719543864689
+0.7,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Recent13,95,95,1710,4,0.1712959182434106,0.1712959182434106,0.09755157718048084
+0.7,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,95,95,1710,4,0.23291540650653023,0.19260822120172275,0.15261343752863846
+0.7,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,LightGBM,95,95,1710,4,0.16566474877091114,0.11548581807086429,0.08224802978840091
+0.8,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Empirical,95,95,1710,4,0.2103862044271957,0.1498871964820238,0.09138719543864689
+0.8,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Recent13,95,95,1710,4,0.1712959182434106,0.1712959182434106,0.09755157718048084
+0.8,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,95,95,1710,4,0.23291540650653023,0.19260822120172275,0.15261343752863846
+0.8,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,LightGBM,95,95,1710,4,0.16566474877091114,0.11548581807086429,0.08224802978840091
+0.9,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Empirical,95,95,1710,4,0.2103862044271957,0.1498871964820238,0.09138719543864689
+0.9,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,Recent13,95,95,1710,4,0.1712959182434106,0.1712959182434106,0.09755157718048084
+0.9,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,95,95,1710,4,0.23291540650653023,0.19260822120172275,0.15261343752863846
+0.9,main_W42,Smooth,Current threshold non-Zero sample; varies with threshold,LightGBM,95,95,1710,4,0.16566474877091114,0.11548581807086429,0.08224802978840091

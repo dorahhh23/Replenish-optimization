@@ -1,0 +1,7 @@
+﻿threshold,case,table_id,interval_level,method,outside_points,below_lower_bound,above_upper_bound,negative_actual_outside_points
+0.7,main_W42,Count_eligible_nonzero,90,Empirical,1650,325,1325,83
+0.7,main_W42,Count_eligible_nonzero,90,Recent13,2069,490,1579,83
+0.7,main_W42,Count_eligible_nonzero,90,DampedTrendResidual,9078,7193,1885,61
+0.7,main_W42,Count_eligible_nonzero,90,LightGBM,1071,83,988,83
+0.7,main_W42,Count_eligible_nonzero,90,Poisson,16739,11964,4775,83
+0.7,main_W42,Count_eligible_nonzero,90,NegativeBinomial,2436,882,1554,83

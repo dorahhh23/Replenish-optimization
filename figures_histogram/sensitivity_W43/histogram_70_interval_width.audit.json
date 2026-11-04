@@ -1,0 +1,25 @@
+{
+  "case": "sensitivity_W43",
+  "interval_level": 70,
+  "normalization": "interval_width",
+  "source_rows": 98253,
+  "histogram_count": 98253,
+  "model_point_counts": {
+    "Empirical": 13661,
+    "Recent13": 12871,
+    "DampedTrendResidual": 18872,
+    "LightGBM": 13312,
+    "Poisson": 25591,
+    "NegativeBinomial": 13946
+  },
+  "bins": 72,
+  "display_transform": "sign(x) * log1p(abs(x) / 0.1)",
+  "minimum_signed_distance": -157.0,
+  "maximum_signed_distance": 3850.0,
+  "shared_bin_edges": true,
+  "zero_is_bin_boundary": true,
+  "no_downsampling": true,
+  "no_tail_clipping": true,
+  "signed_values_unchanged": true,
+  "negative_actual_outside_points": 726
+}

@@ -1,0 +1,20 @@
+{
+  "threshold": 0.6,
+  "case": "sensitivity_W43",
+  "table_id": "Count_eligible_nonzero",
+  "interval_level": 90,
+  "source_rows": 28646,
+  "histogram_count": 28646,
+  "groups": [
+    "Smooth",
+    "Erratic",
+    "Intermittent",
+    "Lumpy"
+  ],
+  "zero_excluded": true,
+  "no_tail_clipping": true,
+  "no_downsampling": true,
+  "normalization": "distance / max(median(abs(nonzero training sales)), 1)",
+  "minimum_signed_distance": -15.923076923076923,
+  "maximum_signed_distance": 64.0
+}

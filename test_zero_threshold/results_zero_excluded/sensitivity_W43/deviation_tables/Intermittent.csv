@@ -1,0 +1,17 @@
+﻿Zero Threshold,Case,Table,Sample Policy,Model,Cohort SKUs,Scored SKUs,Observed Points,Negative Actuals,70% Mean Normalized Outside Distance,80% Mean Normalized Outside Distance,90% Mean Normalized Outside Distance
+0.6,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Empirical,23,23,431,0,0.24837302845633058,0.20303486439509838,0.14483146631954114
+0.6,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Recent13,23,23,431,0,0.17809968469381657,0.17809968469381657,0.14315225172018992
+0.6,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,23,23,431,0,0.3301580531995591,0.2695388195622252,0.22997434286929744
+0.6,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,LightGBM,23,23,431,0,0.18807155228348466,0.13384083946908223,0.10512975747788589
+0.7,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Empirical,57,57,1071,2,0.21587758872563115,0.17423958847710594,0.13125827406221013
+0.7,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Recent13,57,57,1071,2,0.17902190481328045,0.17902190481328045,0.13572755857383564
+0.7,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,57,57,1071,2,0.2924390018058388,0.2469888722990318,0.20889079276280775
+0.7,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,LightGBM,57,57,1071,2,0.18773287454627025,0.13855519491071686,0.10864061860376283
+0.8,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Empirical,119,119,2237,4,0.23258474151169817,0.18983604587352346,0.13511213739027567
+0.8,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Recent13,119,119,2237,4,0.19427535391030015,0.19427535391030015,0.14022488316300266
+0.8,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,119,119,2237,4,0.30130394458961657,0.25517165110064205,0.20986285721352343
+0.8,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,LightGBM,119,119,2237,4,0.1978345404188223,0.15675915413569647,0.10377986019171846
+0.9,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Empirical,332,332,6248,9,0.25337381827667393,0.19201685442136937,0.14480171294267172
+0.9,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,Recent13,332,332,6248,9,0.2087217698190356,0.2087217698190356,0.14916579428804047
+0.9,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,DampedTrendResidual,332,332,6248,9,0.2937785242353002,0.25163705315253,0.20681693675100418
+0.9,sensitivity_W43,Intermittent,Current threshold non-Zero sample; varies with threshold,LightGBM,332,332,6248,9,0.21363354985441657,0.16527616678058912,0.11946788675878259

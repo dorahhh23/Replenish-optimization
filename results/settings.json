@@ -1,0 +1,163 @@
+{
+  "experiment": "B",
+  "zero_threshold": 0.6,
+  "zero_policy": "Training zero share >= threshold => point forecast and every prediction interval equal zero for all methods; test demand remains scored",
+  "demand_groups": [
+    "Smooth",
+    "Erratic",
+    "Intermittent",
+    "Lumpy",
+    "Zero"
+  ],
+  "negative_sales_policy": "Returns retained at original signed values; no separate returns group",
+  "classification": "Zero share first; remaining groups use positive-demand ADI and CV squared regardless of returns",
+  "quantiles": [
+    0.05,
+    0.1,
+    0.15,
+    0.5,
+    0.85,
+    0.9,
+    0.95
+  ],
+  "intervals": [
+    70,
+    80,
+    90
+  ],
+  "distance": "max(lower - actual, actual - upper, 0)",
+  "table_mean": "All scored observations; covered observations contribute zero",
+  "plot_points": "All outside observations; no downsampling",
+  "normalizations": {
+    "training_sd": "distance / max(sample standard deviation of training sales, 1 unit)",
+    "nonzero_median": "distance / max(median(abs(nonzero training sales)), 1 unit)",
+    "interval_width": "distance / max(predicted upper - lower, 1 unit)"
+  },
+  "group_counts": {
+    "Zero": 5258,
+    "Lumpy": 604,
+    "Erratic": 484,
+    "Smooth": 95,
+    "Intermittent": 23
+  },
+  "common_six_method_skus": 6345,
+  "lightgbm_version": "4.6.0",
+  "max_rounds": 200,
+  "threads": 2,
+  "training_log": [
+    {
+      "group": "Erratic",
+      "skus": 484,
+      "implementation": "Grouped LightGBM quantile regression",
+      "supervised_rows": 128744,
+      "internal_fit_rows": 74052,
+      "validation_rows": 2904,
+      "last_internal_fit_target": "2026-W18",
+      "first_validation_target": "2026-W19",
+      "final_fit_end": "2026-W24",
+      "selected_rounds": [
+        1,
+        1,
+        11,
+        1,
+        3,
+        18,
+        19
+      ],
+      "quantile_crossings_repaired": 0
+    },
+    {
+      "group": "Intermittent",
+      "skus": 23,
+      "implementation": "Grouped LightGBM quantile regression",
+      "supervised_rows": 6118,
+      "internal_fit_rows": 3519,
+      "validation_rows": 138,
+      "last_internal_fit_target": "2026-W18",
+      "first_validation_target": "2026-W19",
+      "final_fit_end": "2026-W24",
+      "selected_rounds": [
+        1,
+        1,
+        1,
+        38,
+        1,
+        1,
+        14
+      ],
+      "quantile_crossings_repaired": 0
+    },
+    {
+      "group": "Lumpy",
+      "skus": 604,
+      "implementation": "Grouped LightGBM quantile regression",
+      "supervised_rows": 160664,
+      "internal_fit_rows": 92412,
+      "validation_rows": 3624,
+      "last_internal_fit_target": "2026-W18",
+      "first_validation_target": "2026-W19",
+      "final_fit_end": "2026-W24",
+      "selected_rounds": [
+        1,
+        1,
+        1,
+        22,
+        16,
+        20,
+        14
+      ],
+      "quantile_crossings_repaired": 19
+    },
+    {
+      "group": "Smooth",
+      "skus": 95,
+      "implementation": "Grouped LightGBM quantile regression",
+      "supervised_rows": 25270,
+      "internal_fit_rows": 14535,
+      "validation_rows": 570,
+      "last_internal_fit_target": "2026-W18",
+      "first_validation_target": "2026-W19",
+      "final_fit_end": "2026-W24",
+      "selected_rounds": [
+        1,
+        30,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "quantile_crossings_repaired": 0
+    },
+    {
+      "group": "Zero",
+      "skus": 5258,
+      "implementation": "Zero rule; no trees fitted"
+    }
+  ],
+  "cases": [
+    {
+      "case": "main_W42",
+      "training_start": "2025-W41",
+      "training_end": "2026-W24",
+      "training_weeks": 36,
+      "test_start": "2026-W25",
+      "test_end": "2026-W42",
+      "test_weeks": 18,
+      "training_complete_skus": 6464,
+      "outside_rows_all_intervals": 256038
+    },
+    {
+      "case": "sensitivity_W43",
+      "training_start": "2025-W41",
+      "training_end": "2026-W24",
+      "training_weeks": 36,
+      "test_start": "2026-W25",
+      "test_end": "2026-W43",
+      "test_weeks": 19,
+      "training_complete_skus": 6464,
+      "outside_rows_all_intervals": 269250
+    }
+  ],
+  "input_sha256": "face68bd26d3a53f84ca1ac19e010f21611dcc9727aac815bc1d729318a96e87"
+}

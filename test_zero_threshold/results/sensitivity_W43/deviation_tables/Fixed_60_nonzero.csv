@@ -1,0 +1,17 @@
+﻿Zero Threshold,Case,Table,Sample Policy,Model,Cohort SKUs,Scored SKUs,Observed Points,Negative Actuals,70% Mean Normalized Outside Distance,80% Mean Normalized Outside Distance,90% Mean Normalized Outside Distance
+0.5,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Empirical,1206,1206,22860,81,0.5034679175128915,0.4162387928992798,0.3204147792895697
+0.5,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Recent13,1206,1206,22860,81,0.45933116051925776,0.45933116051925776,0.3375282878479476
+0.5,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1206,1206,22860,81,0.6164613935206036,0.5336218058813565,0.44494801342374296
+0.5,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,LightGBM,1206,1206,22860,81,0.4508672026233637,0.37790986747328875,0.3045699503709612
+0.6,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Empirical,1206,1206,22860,81,0.41788404829116865,0.3056535033925744,0.1757243793864992
+0.6,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Recent13,1206,1206,22860,81,0.35685676473949085,0.35685676473949085,0.20366860965543043
+0.6,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1206,1206,22860,81,0.5664440861207837,0.4597172761997769,0.33969860225588355
+0.6,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,LightGBM,1206,1206,22860,81,0.35343174317412873,0.2564062610310815,0.1574725128393408
+0.7,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Empirical,1206,1206,22860,81,0.41788404829116865,0.3056535033925744,0.1757243793864992
+0.7,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Recent13,1206,1206,22860,81,0.35685676473949085,0.35685676473949085,0.20366860965543043
+0.7,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1206,1206,22860,81,0.5664440861207837,0.4597172761997769,0.33969860225588355
+0.7,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,LightGBM,1206,1206,22860,81,0.3620091859707035,0.2517493748149691,0.1533510823134639
+0.8,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Empirical,1206,1206,22860,81,0.41788404829116865,0.3056535033925744,0.1757243793864992
+0.8,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,Recent13,1206,1206,22860,81,0.35685676473949085,0.35685676473949085,0.20366860965543043
+0.8,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1206,1206,22860,81,0.5664440861207837,0.4597172761997769,0.33969860225588355
+0.8,sensitivity_W43,Fixed_60_nonzero,Fixed across thresholds,LightGBM,1206,1206,22860,81,0.3617018265743736,0.25848026250412465,0.14539168054244325

@@ -1,0 +1,182 @@
+[
+  {
+    "case": "main_W42",
+    "interval_level": 70,
+    "normalization": "training_sd",
+    "source_outside_rows": 93471,
+    "scatter_points": 93471,
+    "heatmap_count": 93471,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 70,
+    "normalization": "nonzero_median",
+    "source_outside_rows": 93471,
+    "scatter_points": 93471,
+    "heatmap_count": 93471,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 70,
+    "normalization": "interval_width",
+    "source_outside_rows": 93471,
+    "scatter_points": 93471,
+    "heatmap_count": 93471,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 80,
+    "normalization": "training_sd",
+    "source_outside_rows": 85727,
+    "scatter_points": 85727,
+    "heatmap_count": 85727,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 80,
+    "normalization": "nonzero_median",
+    "source_outside_rows": 85727,
+    "scatter_points": 85727,
+    "heatmap_count": 85727,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 80,
+    "normalization": "interval_width",
+    "source_outside_rows": 85727,
+    "scatter_points": 85727,
+    "heatmap_count": 85727,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 90,
+    "normalization": "training_sd",
+    "source_outside_rows": 76840,
+    "scatter_points": 76840,
+    "heatmap_count": 76840,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 90,
+    "normalization": "nonzero_median",
+    "source_outside_rows": 76840,
+    "scatter_points": 76840,
+    "heatmap_count": 76840,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "main_W42",
+    "interval_level": 90,
+    "normalization": "interval_width",
+    "source_outside_rows": 76840,
+    "scatter_points": 76840,
+    "heatmap_count": 76840,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 70,
+    "normalization": "training_sd",
+    "source_outside_rows": 98253,
+    "scatter_points": 98253,
+    "heatmap_count": 98253,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 70,
+    "normalization": "nonzero_median",
+    "source_outside_rows": 98253,
+    "scatter_points": 98253,
+    "heatmap_count": 98253,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 70,
+    "normalization": "interval_width",
+    "source_outside_rows": 98253,
+    "scatter_points": 98253,
+    "heatmap_count": 98253,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 80,
+    "normalization": "training_sd",
+    "source_outside_rows": 90137,
+    "scatter_points": 90137,
+    "heatmap_count": 90137,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 80,
+    "normalization": "nonzero_median",
+    "source_outside_rows": 90137,
+    "scatter_points": 90137,
+    "heatmap_count": 90137,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 80,
+    "normalization": "interval_width",
+    "source_outside_rows": 90137,
+    "scatter_points": 90137,
+    "heatmap_count": 90137,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 90,
+    "normalization": "training_sd",
+    "source_outside_rows": 80860,
+    "scatter_points": 80860,
+    "heatmap_count": 80860,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 90,
+    "normalization": "nonzero_median",
+    "source_outside_rows": 80860,
+    "scatter_points": 80860,
+    "heatmap_count": 80860,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  },
+  {
+    "case": "sensitivity_W43",
+    "interval_level": 90,
+    "normalization": "interval_width",
+    "source_outside_rows": 80860,
+    "scatter_points": 80860,
+    "heatmap_count": 80860,
+    "no_downsampling": true,
+    "no_tail_clipping": true
+  }
+]

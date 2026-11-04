@@ -1,0 +1,10 @@
+{
+  "thresholds": [0.5, 0.6, 0.7, 0.8],
+  "input": "../input/weekly_sales.csv",
+  "output": "results",
+  "max_rounds": 200,
+  "threads": 2,
+  "seed": 20261030,
+  "include_week43_sensitivity": true,
+  "dpi": 160
+}

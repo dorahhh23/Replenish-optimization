@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "png_files_redrawn": 40,
+  "pixel_file_hashes_unchanged": 40,
+  "non_image_results_unchanged": true,
+  "standalone_plotting_without_lightgbm": true,
+  "shared_plot_function": true
+}

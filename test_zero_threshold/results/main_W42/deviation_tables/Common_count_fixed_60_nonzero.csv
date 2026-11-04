@@ -1,0 +1,25 @@
+﻿Zero Threshold,Case,Table,Sample Policy,Model,Cohort SKUs,Scored SKUs,Observed Points,Negative Actuals,70% Mean Normalized Outside Distance,80% Mean Normalized Outside Distance,90% Mean Normalized Outside Distance
+0.5,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,19521,70,0.5107497994012012,0.42081520422260665,0.3229594605196493
+0.5,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,19521,70,0.4652068603103146,0.4652068603103146,0.3402353281416301
+0.5,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,19521,70,0.6208331139788777,0.5355493995679554,0.4461025444410681
+0.5,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,19521,70,0.4565354236357265,0.3820674118427826,0.3078546219326474
+0.5,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,19521,70,0.9551522562468697,0.90759488593294,0.8432085635648487
+0.5,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,19521,70,0.5039266314574353,0.4269589095763239,0.34364081544824965
+0.6,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,19521,70,0.4226389409392111,0.3076186928929264,0.1750576791885734
+0.6,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,19521,70,0.3596316587089715,0.3596316587089715,0.20287993656785797
+0.6,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,19521,70,0.5678444752225891,0.4587724426988186,0.33715271972969924
+0.6,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,19521,70,0.3572448052535258,0.25850911793478376,0.157847875474911
+0.6,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,19521,70,0.9422246996753479,0.8819591302579016,0.8018266804497557
+0.6,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,19521,70,0.4171154604750349,0.3174486143157491,0.20722512291757778
+0.7,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,19521,70,0.4226389409392111,0.3076186928929264,0.1750576791885734
+0.7,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,19521,70,0.3596316587089715,0.3596316587089715,0.20287993656785797
+0.7,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,19521,70,0.5678444752225891,0.4587724426988186,0.33715271972969924
+0.7,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,19521,70,0.3656684733536251,0.25384246565573715,0.15358951955711161
+0.7,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,19521,70,0.9422246996753479,0.8819591302579016,0.8018266804497557
+0.7,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,19521,70,0.4171154604750349,0.3174486143157491,0.20722512291757778
+0.8,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,19521,70,0.4226389409392111,0.3076186928929264,0.1750576791885734
+0.8,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,19521,70,0.3596316587089715,0.3596316587089715,0.20287993656785797
+0.8,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,19521,70,0.5678444752225891,0.4587724426988186,0.33715271972969924
+0.8,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,19521,70,0.3652244110614844,0.26053356806295047,0.14554786591615912
+0.8,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,19521,70,0.9422246996753479,0.8819591302579016,0.8018266804497557
+0.8,main_W42,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,19521,70,0.4171154604750349,0.3174486143157491,0.20722512291757778

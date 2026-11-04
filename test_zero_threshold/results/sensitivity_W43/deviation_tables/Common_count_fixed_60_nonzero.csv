@@ -1,0 +1,25 @@
+﻿Zero Threshold,Case,Table,Sample Policy,Model,Cohort SKUs,Scored SKUs,Observed Points,Negative Actuals,70% Mean Normalized Outside Distance,80% Mean Normalized Outside Distance,90% Mean Normalized Outside Distance
+0.5,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,20599,71,0.5013965105036676,0.413571985806932,0.317621555796287
+0.5,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,20599,71,0.45699414892557616,0.45699414892557616,0.3345904781049943
+0.5,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,20599,71,0.6135415665460989,0.5293613010380086,0.44101864102415206
+0.5,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,20599,71,0.448360310701403,0.37541406106603437,0.3026938058036342
+0.5,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,20599,71,0.9440234800725513,0.8966218775847433,0.8324039618451233
+0.5,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,20599,71,0.4950738850434545,0.4195876473008083,0.33798918226305075
+0.6,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,20599,71,0.413895187914704,0.3016340228211388,0.17184766848783734
+0.6,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,20599,71,0.3527427002592714,0.3527427002592714,0.19910400129158703
+0.6,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,20599,71,0.5625322945564325,0.45453509478284254,0.3344974545263684
+0.6,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,20599,71,0.3501492603360138,0.25320062697563267,0.1544653886830638
+0.6,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,20599,71,0.9320222800821532,0.8719590430013321,0.7919198101031947
+0.6,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,20599,71,0.4090319364463304,0.3111959179238638,0.20327136922688208
+0.7,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,20599,71,0.413895187914704,0.3016340228211388,0.17184766848783734
+0.7,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,20599,71,0.3527427002592714,0.3527427002592714,0.19910400129158703
+0.7,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,20599,71,0.5625322945564325,0.45453509478284254,0.3344974545263684
+0.7,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,20599,71,0.3584969600590769,0.248520975411019,0.15033168204686614
+0.7,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,20599,71,0.9320222800821532,0.8719590430013321,0.7919198101031947
+0.7,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,20599,71,0.4090319364463304,0.3111959179238638,0.20327136922688208
+0.8,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Empirical,1087,1087,20599,71,0.413895187914704,0.3016340228211388,0.17184766848783734
+0.8,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Recent13,1087,1087,20599,71,0.3527427002592714,0.3527427002592714,0.19910400129158703
+0.8,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,DampedTrendResidual,1087,1087,20599,71,0.5625322945564325,0.45453509478284254,0.3344974545263684
+0.8,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,LightGBM,1087,1087,20599,71,0.35807481175384565,0.25519112294357227,0.14241676270042206
+0.8,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,Poisson,1087,1087,20599,71,0.9320222800821532,0.8719590430013321,0.7919198101031947
+0.8,sensitivity_W43,Common_count_fixed_60_nonzero,Fixed across thresholds,NegativeBinomial,1087,1087,20599,71,0.4090319364463304,0.3111959179238638,0.20327136922688208
